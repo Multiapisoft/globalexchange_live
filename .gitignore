@@ -5,8 +5,11 @@
 .env.*.local
 *.env.local
 *.env.php
+!*.env.php.example
+!infra/shared-mysql/.env.example
 phpunit.xml
 phpunit.xml.dist
+infra/shared-mysql/.env
 
 # -----------------------------------
 # Composer dependencies
@@ -120,8 +123,14 @@ yarn-error.log*
 404.html
 502.html
 *.sh
+!infra/**/*.sh
 pull.php
 webhook.php
 deploy.php
 dbpanel.php
 *.zip
+# local docker secrets / dumps already on server
+infra/shared-mysql/.env
+.env.php
+.env
+

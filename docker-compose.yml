@@ -1,0 +1,44 @@
+# App stack for https://dev.globalexchange.live (VPS)
+# Requires:
+#   1) infra/shared-mysql running (network shared_db_net)
+#   2) shared edge Caddy (p2p-caddy) routing this domain → gel-nginx:80
+
+name: globalexchange-live
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: gel-app
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - app_net
+      - shared_db_net
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: gel-nginx
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - app_net
+      - edge
+    expose:
+      - "80"
+    depends_on:
+      - app
+
+networks:
+  app_net:
+    driver: bridge
+  shared_db_net:
+    external: true
+    name: shared_db_net
+  edge:
+    external: true
+    name: edge
