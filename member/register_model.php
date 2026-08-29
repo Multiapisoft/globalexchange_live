@@ -43,7 +43,7 @@ if (isset($_POST)) {
         $refer_id = 100;
     }
     $position = isset($_POST['position']) ? tres($_POST['position']) : '';
-    $login_id = "TB".$uid ;
+    $login_id = "GE".$uid ;
     $password = tres($_POST['password']);
     $confirm_password = tres($_POST['confirm_password']);
 
