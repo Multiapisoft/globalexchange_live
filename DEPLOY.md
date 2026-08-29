@@ -117,8 +117,11 @@ docker compose logs -f app
 docker exec -it shared-mysql mysql -uhiuser -p
 ```
 
-## Security notes
+## Auto deploy (push → live)
 
-- Root / hiuser passwords strong rakho; `.env` / `.env.php` commit mat karo  
-- MySQL ko public `0.0.0.0:3306` pe mat bind karo  
-- Wallet / SMTP keys sirf server `.env.php` me
+`master` pe push hote hi GitHub Action VPS pe SSH karke `infra/deploy.sh` chalati hai.
+
+Secrets (repo Settings → Secrets): `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`
+
+Manual: Actions → **Deploy to VPS** → Run workflow  
+Ya VPS pe: `cd ~/apps/globalexchange_live && bash infra/deploy.sh`
