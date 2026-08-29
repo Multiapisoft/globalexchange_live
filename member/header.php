@@ -179,7 +179,7 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         }
 
         .navbar-brand img {
-            height: 100px;
+            height: 70px;
             transition: transform 0.3s ease;
         }
 
