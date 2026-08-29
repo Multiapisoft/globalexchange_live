@@ -3,10 +3,11 @@ ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 // error_reporting(-1);
 $dbdriver = "mysqli";
+$dbhost = isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : 'localhost';
 $dbuser = isset($_ENV['DB_USERNAME']) ? $_ENV['DB_USERNAME'] : 'root';
 $password = isset($_ENV['DB_PASSWORD']) ? $_ENV['DB_PASSWORD'] : '';
 $dbname = isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : '';
-$link = my_connect('localhost', $dbuser, $password, $dbname);
+$link = my_connect($dbhost, $dbuser, $password, $dbname);
 
 function my_connect($server, $username, $password, $db) {
     global $dbdriver;

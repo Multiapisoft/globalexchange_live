@@ -1,0 +1,42 @@
+# Shared MySQL for ALL projects on this server.
+# Start once: docker compose up -d
+# Other apps join network: shared_db_net  and host: shared-mysql
+
+name: shared-mysql
+
+services:
+  shared-mysql:
+    image: mysql:8.0
+    container_name: shared-mysql
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --sql-mode=
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_SHARED_USER:-hiuser}
+      MYSQL_PASSWORD: ${MYSQL_SHARED_PASSWORD}
+    volumes:
+      - shared_mysql_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d:ro
+    # Only localhost — NOT public internet
+    ports:
+      - "127.0.0.1:3306:3306"
+    networks:
+      - shared_db_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  shared_mysql_data:
+
+networks:
+  shared_db_net:
+    name: shared_db_net
+    driver: bridge

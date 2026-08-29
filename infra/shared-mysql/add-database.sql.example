@@ -1,0 +1,9 @@
+-- Use after MySQL is already running (init scripts won't re-run).
+-- docker exec -i shared-mysql mysql -uroot -p < add-database.sql
+
+CREATE DATABASE IF NOT EXISTS `YOUR_NEW_DB`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+GRANT ALL PRIVILEGES ON `YOUR_NEW_DB`.* TO 'hiuser'@'%';
+FLUSH PRIVILEGES;
