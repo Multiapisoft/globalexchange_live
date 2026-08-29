@@ -25,7 +25,6 @@ echo "HEAD: $(git rev-parse --short HEAD)"
 
 if [[ -n "$ENV_BAK" && -f "$ENV_BAK" ]]; then
   cp "$ENV_BAK" "$ROOT/.env.php"
-  chmod 600 "$ROOT/.env.php"
   rm -f "$ENV_BAK"
   echo "==> restored .env.php"
 fi
@@ -34,6 +33,10 @@ if [[ ! -f "$ROOT/.env.php" ]]; then
   echo "ERROR: .env.php missing on server — aborting."
   exit 1
 fi
+
+# PHP-FPM (www-data) must read .env.php — 600 breaks the site
+chmod 644 "$ROOT/.env.php"
+echo "==> .env.php permissions set for php-fpm"
 
 # Shared networks
 docker network create edge 2>/dev/null || true
