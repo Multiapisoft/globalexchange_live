@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&  isset($_POST['send_otp'])) {
     <link href="../../assets/dist/css/component_ui.css" rel="stylesheet" type="text/css" />
     <link href="../../assets/dist/css/skins/component_ui_black.css" rel="stylesheet" type="text/css" />
     <link href="../../assets/dist/css/custom.css" rel="stylesheet" type="text/css" />
+  <link href="../css/ge-theme.css" rel="stylesheet" type="text/css" />
     <style>
         .form-control {
             color: #fff;

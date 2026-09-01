@@ -14,11 +14,47 @@ include_once '../lib/config.php';
   <link href="../assets/dist/css/component_ui.css" rel="stylesheet" type="text/css"/>
   <link href="../assets/dist/css/skins/component_ui_black.css" rel="stylesheet" type="text/css"/>
   <link href="../assets/dist/css/custom.css" rel="stylesheet" type="text/css"/>
+    <link href="css/ge-theme.css" rel="stylesheet" type="text/css" />
   <style>
     .form-control { color: #fff; }
     .form-control::placeholder { color: #fff; opacity: 1; }
     .hidden { display: none; }
     .margin-top { margin-top: 15px; }
+  </style>
+  <style>
+    /* ge-forgot */
+    body, .login-wrapper {
+      background: #050505 !important;
+      color: #f5f5f5 !important;
+      min-height: 100vh;
+    }
+    .panel, .panel-bd {
+      background: #121212 !important;
+      border: 1px solid rgba(212, 175, 55, 0.22) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+    .panel-heading, .header-title h3 { color: #d4af37 !important; }
+    .header-title small { color: #a0a0a0 !important; }
+    .form-control {
+      background: #0a0a0a !important;
+      border: 1px solid rgba(212, 175, 55, 0.22) !important;
+      color: #f5f5f5 !important;
+      border-radius: 12px !important;
+    }
+    .input-group-addon {
+      background: #1a1a1a !important;
+      border-color: rgba(212, 175, 55, 0.22) !important;
+      color: #d4af37 !important;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #f5d76e, #d4af37, #b8860b) !important;
+      border: none !important;
+      color: #111 !important;
+      font-weight: 700;
+      border-radius: 12px !important;
+    }
+    label { color: #a0a0a0 !important; }
   </style>
 </head>
 <body>

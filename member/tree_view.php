@@ -36,25 +36,25 @@ $rsS = my_query("SELECT * FROM user WHERE placement_id = '$uid'");
         margin-top: 10px;
     }
     table {
-        background-color: #fff;
-        border-bottom: 1px solid #dedede;
+        background-color: #121212;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.22);
         border-collapse: collapse;
-        color: #6e6e6e;
+        color: #f5f5f5;
         margin-bottom: 20px;
         width: 100%;
     }
     table td {
-        border-right: 1px solid #dedede;
+        border-right: 1px solid rgba(212, 175, 55, 0.22);
         padding: 8px 10px;
     }
     table td:hover {
-        background-color: #f2f2f2;
+        background-color: rgba(240, 185, 11, 0.08);
     }
     table th h4 {
         margin: 0;
     }
     table th {
-        border-right: 1px solid #dedede;
+        border-right: 1px solid rgba(212, 175, 55, 0.22);
         font-weight: normal;
         padding: 10px;
         text-align: left;
@@ -72,11 +72,11 @@ $rsS = my_query("SELECT * FROM user WHERE placement_id = '$uid'");
         background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     }
     table tr {
-        border-left: 1px solid #dedede;
-        border-top: 1px solid #dedede;
+        border-left: 1px solid rgba(212, 175, 55, 0.22);
+        border-top: 1px solid rgba(212, 175, 55, 0.22);
     }
     table tr.caption {
-        border-left: 1px solid #dedede;
+        border-left: 1px solid rgba(212, 175, 55, 0.22);
     }
 
     .description-hover {

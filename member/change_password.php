@@ -4,313 +4,240 @@ include_once 'header.php';
 ?>
 
 <style>
-/* Menu and Submenu Text Colors - Light */
-#side-menu li a,
-#side-menu li a .menu-text,
-.nav-second-level li a,
-.nav-second-level li a i,
-.sidebar .menu-text {
-    color: #eaecef !important;
+/* Change Password — match profile.html / profile.php theme */
+.content-header { display: none !important; }
+
+.ge-profile {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.25rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.ge-profile *,
+.ge-profile *::before,
+.ge-profile *::after {
+  box-sizing: border-box;
 }
 
-/* Fresh Change Password Theme - Same as Dashboard */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.ge-profile-head h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  color: #fff;
+}
+.ge-profile-head p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
 }
 
-:root {
-    /* Dark Color Palette aligned with dashboard */
-    --bg-primary: #0b0e11;
-    --bg-secondary: #1e2329;
-    --bg-accent: #2b3139;
-    --text-primary: #eaecef;
-    --text-secondary: #848e9c;
-    --text-muted: #6c757d;
-    --brand-primary: #4f46e5;
-    --brand-secondary: #7c3aed;
-    --success: #02c076;
-    --warning: #f0b90b;
-    --danger: #f6465d;
-    --info: #3b82f6;
-    --border: #2c3137;
-    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
-    --radius: 12px;
-    --radius-lg: 16px;
+.ge-panel {
+  border-radius: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: #141414;
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+@media (min-width: 640px) {
+  .ge-panel { padding: 1.5rem 1.75rem; }
 }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+.ge-panel > h3 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
 }
 
-#page-wrapper {
-    background: var(--bg-primary);
-    margin-top: 0;
+.ge-pass-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 28rem;
 }
 
-.content-header {
-    display: none;
+.ge-field label {
+  display: block;
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+.ge-field input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: #0a0a0a;
+  color: #fff;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: inherit;
+  line-height: 1.4;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.ge-field input:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+.ge-field input::placeholder {
+  color: #6b7280;
 }
 
-/* Fresh Container */
-.fresh-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+.ge-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: #f5c842;
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.65);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.ge-btn-outline:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: #ffe566;
+  text-decoration: none;
 }
 
-/* Fresh Card */
-.fresh-card {
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    padding: 32px;
-    margin-bottom: 24px;
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease-out;
+.ge-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1408;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.28);
+  text-decoration: none;
+  transition: filter 0.2s ease;
+}
+.ge-btn-gold:hover {
+  filter: brightness(1.06);
+  color: #1a1408;
+  text-decoration: none;
 }
 
-.fresh-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+.ge-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.25rem;
 }
 
-/* Fresh Header */
-.fresh-header {
-    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    color: white;
-    margin-bottom: 32px;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
+.ge-hint {
+  margin: 1rem 0 0;
+  font-size: 0.78rem;
+  color: #9ca3af;
 }
 
-.fresh-header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: rotate 20s linear infinite;
+.ge-secure {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08), transparent);
+  padding: 1.15rem 1.25rem;
+}
+.ge-secure-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  color: #1a1408;
+  font-size: 1.1rem;
+}
+.ge-secure h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+}
+.ge-secure p {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: #9ca3af;
 }
 
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.animate-in {
+  animation: geFadeUp 0.4s ease both;
 }
-
-.fresh-header-content {
-    position: relative;
-    z-index: 2;
-}
-
-.fresh-header h1 {
-    font-size: 2.5rem;
-    font-weight: 900;
-    margin-bottom: 12px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.fresh-header p {
-    font-size: 2rem;
-    font-weight: 600;
-    opacity: 0.9;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.fresh-header-icon {
-    font-size: 3rem;
-    margin-bottom: 16px;
-    opacity: 0.9;
-}
-
-/* Fresh Form */
-.fresh-form-group {
-    margin-bottom: 24px;
-}
-
-.fresh-form-label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 2rem;
-    color: var(--text-primary);
-    font-weight: 700;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.fresh-form-control {
-    width: 100%;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    color: var(--text-primary);
-    font-size: 2rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    font-family: inherit;
-    margin-bottom: 16px;
-}
-
-.fresh-form-control:focus {
-    border-color: var(--brand-primary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    transform: translateY(-1px);
-}
-
-.fresh-form-control::placeholder {
-    color: var(--text-muted);
-    font-weight: 400;
-}
-
-/* Fresh Button */
-.fresh-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 32px;
-    border-radius: 50px;
-    font-weight: 800;
-    font-size: 2rem;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.fresh-btn-primary {
-    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-    color: white;
-}
-
-.fresh-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.fresh-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.fresh-btn:hover::before {
-    left: 100%;
-}
-
-/* Fresh Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Fresh Mobile Responsive */
-@media (max-width: 768px) {
-    .fresh-container {
-        padding: 16px;
-    }
-
-    .fresh-header {
-        padding: 24px;
-    }
-
-    .fresh-header h1 {
-        font-size: 2rem;
-        font-weight: 900;
-    }
-
-    .fresh-header p {
-        font-size:2rem;
-        font-weight: 600;
-    }
-
-    .fresh-card {
-        padding: 24px;
-    }
-
-    .fresh-form-label {
-        font-size: 2rem;
-        font-weight: 700;
-    }
-
-    .fresh-form-control {
-        font-size: 2rem;
-        font-weight: 500;
-        padding: 14px 16px;
-    }
-
-    .fresh-btn {
-        font-size: 2rem;
-        font-weight: 800;
-        padding: 14px 28px;
-    }
+@keyframes geFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
 
-<!-- Fresh Change Password Container -->
-<div class="fresh-container">
-    <!-- Fresh Header -->
-    <div class="fresh-header">
-        <div class="fresh-header-content">
-            <div class="fresh-header-icon">
-                <i class="fas fa-key"></i>
-            </div>
-            <h1>Change Password</h1>
-            <p>Update your account security</p>
-        </div>
+<div class="ge-profile">
+  <div class="ge-profile-head">
+    <h1>Change Password</h1>
+    <p>Update your account security</p>
+  </div>
+
+  <section class="ge-secure animate-in">
+    <div class="ge-secure-icon"><i class="fas fa-key"></i></div>
+    <div>
+      <h2>Keep your account secure</h2>
+      <p>Use a strong password and never share it. You will need your current password to confirm the change.</p>
     </div>
+  </section>
 
-    <!-- Fresh Password Form Card -->
-    <div class="fresh-card">
-        <form action="change_password_model.php" method="post">
-            <div class="fresh-form-group">
-                <label class="fresh-form-label" for="old_password">Current Password *</label>
-                <input class="fresh-form-control" type="password" id="old_password" name="old_password" placeholder="Enter your current password" maxlength="20" required="required">
-            </div>
+  <section class="ge-panel animate-in">
+    <h3>Change password</h3>
+    <form action="change_password_model.php" method="post" class="ge-pass-stack">
+      <div class="ge-field">
+        <label for="old_password">Current password</label>
+        <input type="password" id="old_password" name="old_password" placeholder="••••••••" maxlength="20" required="required">
+      </div>
 
-            <div class="fresh-form-group">
-                <label class="fresh-form-label" for="password">New Password *</label>
-                <input class="fresh-form-control" type="password" id="password" name="password" placeholder="Enter your new password" maxlength="20" required="required" onchange="form.confirm_password.pattern = this.value;">
-            </div>
+      <div class="ge-field">
+        <label for="password">New password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" maxlength="20" required="required" onchange="this.form.confirm_password.pattern = this.value;">
+      </div>
 
-            <div class="fresh-form-group">
-                <label class="fresh-form-label" for="confirm_password">Confirm New Password *</label>
-                <input class="fresh-form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your new password" maxlength="20" required="required">
-            </div>
+      <div class="ge-field">
+        <label for="confirm_password">Confirm new password</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" maxlength="20" required="required">
+      </div>
 
-            <div style="text-align: center; margin-top: 32px;">
-                <button type="submit" class="fresh-btn fresh-btn-primary">
-                    <i class="fas fa-save"></i> Update Password
-                </button>
-            </div>
-        </form>
-    </div>
+      <div class="ge-actions">
+        <button type="submit" class="ge-btn-outline">Update Password</button>
+        <a href="profile.php" class="ge-btn-gold">Back to Profile</a>
+      </div>
+    </form>
+    <p class="ge-hint">Choose a password you don’t use elsewhere. Confirm carefully before saving.</p>
+  </section>
 </div>
 
 <?php include_once 'footer.php'; ?>

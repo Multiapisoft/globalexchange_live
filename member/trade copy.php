@@ -211,9 +211,9 @@ $active_investors = 1250 + rand(0, 100);
 
 
     :root {
-        --primary: #4f46e5;
-        --primary-hover: #4338ca;
-        --secondary: #7c3aed;
+        --primary: #f0b90b;
+        --primary-hover: #c9970a;
+        --secondary: #c9970a;
         --bg-light: #f8fafc;
         --bg-white: #ffffff;
         --text-primary: #1a202c;
@@ -295,7 +295,7 @@ $active_investors = 1250 + rand(0, 100);
 
     .package-card.selected .card {
         border: 2px solid var(--primary);
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
+        box-shadow: 0 0 0 4px rgba(240, 185, 11, 0.1) !important;
     }
 
     .package-ribbon {
@@ -392,8 +392,8 @@ $active_investors = 1250 + rand(0, 100);
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-        background: linear-gradient(135deg, var(--primary-hover) 0%, #6d28d9 100%);
+        box-shadow: 0 10px 15px -3px rgba(240, 185, 11, 0.3);
+        background: linear-gradient(135deg, var(--primary-hover) 0%, #a67c00 100%);
     }
 
     .form-control,
@@ -410,7 +410,7 @@ $active_investors = 1250 + rand(0, 100);
     .form-control:focus,
     .form-select:focus {
         border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.2);
     }
 
     .input-group-text {

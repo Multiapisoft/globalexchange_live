@@ -1,0 +1,558 @@
+/**
+ * Global Exchange — All member pages theme
+ * Matches dashboard look. Loaded last + reinforced in footer.
+ * UI only — no form/JS behavior changes.
+ */
+
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #141414;
+  --bg-accent: #1a1a1a;
+  --bg-soft: #111111;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --brand-primary: #d4af37;
+  --brand-secondary: #b8860b;
+  --brand-bright: #f5c842;
+  --success: #22c55e;
+  --warning: #d4af37;
+  --danger: #ef4444;
+  --info: #6366f1;
+  --border: rgba(212, 175, 55, 0.22);
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+  --radius: 14px;
+  --radius-lg: 16px;
+  --ge-gold: #d4af37;
+  --ge-bg: #0a0a0a;
+  --ge-bg-card: #141414;
+  --ge-text: #ffffff;
+  --ge-font: "Montserrat", system-ui, sans-serif;
+}
+
+html, body {
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+  font-size: 16px !important;
+}
+
+#page-wrapper,
+.content,
+.content-wrapper {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+/* ===== Page title / hero banners used across pages ===== */
+.fresh-welcome,
+.fresh-investment-header,
+.fresh-profile-header,
+.page-hero,
+.ge-hero,
+.fresh-header,
+.page-header-card {
+  background: linear-gradient(135deg, #161410 0%, #0f0f0f 55%, #12100a 100%) !important;
+  color: #fff !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.08) !important;
+}
+
+.fresh-welcome h1,
+.fresh-welcome h2,
+.fresh-welcome p,
+.fresh-investment-header h1,
+.fresh-investment-header h2,
+.fresh-investment-header p,
+.fresh-profile-header h1,
+.fresh-profile-header h2,
+.fresh-profile-header p,
+.page-hero h1,
+.page-hero p {
+  color: #fff !important;
+  text-shadow: none !important;
+}
+
+.fresh-welcome h1,
+.fresh-investment-header h1,
+.fresh-profile-header h1 {
+  color: #f5c842 !important;
+}
+
+/* ===== Cards / panels / boxes ===== */
+.panel,
+.panel-default,
+.panel-primary,
+.panel-info,
+.panel-success,
+.panel-warning,
+.panel-danger,
+.card,
+.box,
+.fresh-card,
+.lobipanel,
+.widget,
+.well,
+.thumbnail,
+.fresh-form-card,
+.fresh-wallet-card,
+.fresh-stat,
+.fresh-stat-card,
+.fresh-portfolio-card,
+.fresh-income-card,
+.fresh-team-card,
+.fresh-action-card,
+.fresh-plan-card,
+.investment-card,
+.plan-card,
+.wallet-card,
+.stat-box,
+.ref-stat-card,
+.ge-panel-card,
+.ge-wallet-tile,
+.ge-alert {
+  background: linear-gradient(180deg, #171717 0%, #111111 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+  border-radius: 14px !important;
+  color: #fff !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
+}
+
+.panel-heading,
+.panel-footer,
+.card-header,
+.card-footer,
+.box-header,
+.box-footer,
+.fresh-card-header,
+.modal-header {
+  background: linear-gradient(145deg, rgba(212, 175, 55, 0.14), rgba(184, 134, 11, 0.05)) !important;
+  border-color: rgba(212, 175, 55, 0.22) !important;
+  color: #f5c842 !important;
+}
+
+.panel-title,
+.panel-heading h1,
+.panel-heading h2,
+.panel-heading h3,
+.panel-heading h4,
+.card-title,
+.box-title,
+.fresh-section-title,
+.section-title {
+  color: #f5c842 !important;
+  font-weight: 700 !important;
+}
+
+.panel-body,
+.card-body,
+.box-body,
+.fresh-card-body {
+  background: transparent !important;
+  color: #fff !important;
+}
+
+/* ===== Forms ===== */
+.form-control,
+.select2-container--default .select2-selection--single,
+.select2-dropdown,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="search"],
+input[type="url"],
+input[type="date"],
+input[type="datetime-local"],
+textarea,
+select,
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: #0a0a0a !important;
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  font-size: 1rem !important;
+  box-shadow: none !important;
+}
+
+.form-control:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #d4af37 !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15) !important;
+  outline: none !important;
+}
+
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+label,
+.control-label,
+.form-group label,
+.fresh-label {
+  color: #9ca3af !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+}
+
+.help-block,
+.form-text,
+.text-muted {
+  color: #9ca3af !important;
+}
+
+/* ===== Buttons ===== */
+.btn-primary,
+.btn-warning,
+.btn-gold,
+.fresh-btn-primary,
+.fresh-btn,
+button.btn-primary,
+input.btn-primary,
+input[type="submit"].btn-primary {
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%) !important;
+  border: none !important;
+  color: #111 !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.28) !important;
+  text-shadow: none !important;
+}
+
+.btn-primary:hover,
+.btn-warning:hover,
+.fresh-btn-primary:hover {
+  filter: brightness(1.07);
+  color: #000 !important;
+}
+
+.btn-success,
+.fresh-btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  border: none !important;
+  border-radius: 12px !important;
+}
+
+.btn-default,
+.btn-secondary,
+.btn-outline,
+.btn-outline-gold,
+.fresh-btn-outline {
+  background: transparent !important;
+  border: 1px solid rgba(212, 175, 55, 0.65) !important;
+  color: #f5c842 !important;
+  border-radius: 12px !important;
+}
+
+.btn-info {
+  background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+}
+
+/* ===== Tables / reports ===== */
+.table,
+.table-responsive,
+.dataTables_wrapper {
+  color: #fff !important;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+table.dataTable thead th,
+table.dataTable thead td {
+  background: #141414 !important;
+  color: #f5c842 !important;
+  border-color: rgba(212, 175, 55, 0.22) !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+}
+
+.table > tbody > tr > td,
+.table > tfoot > tr > td,
+table.dataTable tbody td {
+  background: #111 !important;
+  color: #e5e5e5 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  font-size: 0.95rem !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > td {
+  background: #151515 !important;
+}
+
+.table-hover > tbody > tr:hover > td {
+  background: rgba(212, 175, 55, 0.08) !important;
+}
+
+.dataTables_filter input,
+.dataTables_length select {
+  background: #0a0a0a !important;
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+.dataTables_info,
+.dataTables_paginate,
+.paginate_button {
+  color: #9ca3af !important;
+}
+
+/* ===== Alerts ===== */
+.alert {
+  border-radius: 12px !important;
+  border-width: 1px !important;
+}
+
+.alert-success {
+  background: rgba(34, 197, 94, 0.12) !important;
+  border-color: rgba(34, 197, 94, 0.35) !important;
+  color: #86efac !important;
+}
+
+.alert-danger,
+.alert-error {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #fca5a5 !important;
+}
+
+.alert-warning {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border-color: rgba(212, 175, 55, 0.35) !important;
+  color: #f5c842 !important;
+}
+
+.alert-info {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  color: #a5b4fc !important;
+}
+
+/* ===== Badges / labels ===== */
+.label-primary,
+.badge-primary,
+.label-warning,
+.badge-warning {
+  background: #d4af37 !important;
+  color: #111 !important;
+}
+
+.label-success,
+.badge-success {
+  background: #22c55e !important;
+}
+
+.label-danger,
+.badge-danger {
+  background: #ef4444 !important;
+}
+
+/* ===== Tabs / nav pills ===== */
+.nav-tabs {
+  border-bottom-color: rgba(212, 175, 55, 0.22) !important;
+}
+
+.nav-tabs > li > a {
+  color: #9ca3af !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li > a:hover {
+  background: rgba(212, 175, 55, 0.12) !important;
+  color: #f5c842 !important;
+  border-color: rgba(212, 175, 55, 0.35) !important;
+}
+
+.nav-pills > li.active > a {
+  background: linear-gradient(135deg, #d4af37, #b8860b) !important;
+  color: #111 !important;
+}
+
+/* ===== Lists / misc ===== */
+.list-group-item {
+  background: #141414 !important;
+  border-color: rgba(212, 175, 55, 0.18) !important;
+  color: #fff !important;
+}
+
+.list-group-item.active {
+  background: rgba(212, 175, 55, 0.18) !important;
+  border-color: #d4af37 !important;
+  color: #f5c842 !important;
+}
+
+hr {
+  border-top-color: rgba(212, 175, 55, 0.18) !important;
+}
+
+a {
+  color: #f5c842;
+}
+
+a:hover {
+  color: #ffe566;
+}
+
+/* Fresh page sections */
+.fresh-section-header,
+.section-header {
+  border-color: rgba(212, 175, 55, 0.22) !important;
+}
+
+.fresh-portfolio-value,
+.fresh-stat-value,
+.fresh-income-value,
+.fresh-team-value,
+.ref-stat-value {
+  color: #fff !important;
+}
+
+.fresh-portfolio-label,
+.fresh-stat-label,
+.fresh-income-label,
+.ref-stat-label,
+.fresh-team-label {
+  color: #9ca3af !important;
+}
+
+.fresh-btn-primary,
+.fresh-action-card,
+.fresh-mobile-tool,
+.fresh-nav-item {
+  border-color: rgba(212, 175, 55, 0.35) !important;
+}
+
+.referral-section,
+.referral-link-section,
+.fresh-referral {
+  background: #141414 !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+  border-radius: 14px !important;
+  color: #fff !important;
+}
+
+.referral-link,
+.copy-button {
+  border-radius: 10px !important;
+}
+
+.copy-button {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border: 1px solid rgba(212, 175, 55, 0.55) !important;
+  color: #f5c842 !important;
+}
+
+/* Pagination */
+.pagination > li > a,
+.pagination > li > span {
+  background: #141414 !important;
+  border-color: rgba(212, 175, 55, 0.22) !important;
+  color: #e5e5e5 !important;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > li > a:hover {
+  background: rgba(212, 175, 55, 0.2) !important;
+  border-color: #d4af37 !important;
+  color: #f5c842 !important;
+}
+
+/* Select2 */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #fff !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background: rgba(212, 175, 55, 0.25) !important;
+  color: #fff !important;
+}
+
+.select2-dropdown {
+  background: #141414 !important;
+  border-color: rgba(212, 175, 55, 0.28) !important;
+}
+
+/* Progress bars */
+.progress {
+  background: #1a1a1a !important;
+  border-radius: 999px !important;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #d4af37, #f5c842) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background: transparent !important;
+}
+
+.breadcrumb > li + li:before {
+  color: #6b7280 !important;
+}
+
+.breadcrumb a {
+  color: #f5c842 !important;
+}
+
+/* Force readable font sizes on common page UI */
+.fresh-card,
+.panel,
+.card,
+.box {
+  font-size: 1rem !important;
+}
+
+.fresh-card h1,
+.fresh-welcome h1 {
+  font-size: clamp(1.25rem, 2.8vw, 1.6rem) !important;
+}
+
+.fresh-card h2,
+.fresh-section-title {
+  font-size: 1.15rem !important;
+}
+
+.fresh-card h3,
+.panel-title {
+  font-size: 1.05rem !important;
+}
+
+/* Responsive content padding already handled by panel-bridge */
+@media (max-width: 767px) {
+  .panel,
+  .fresh-card,
+  .card,
+  .box {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .table {
+    font-size: 0.9rem !important;
+  }
+}

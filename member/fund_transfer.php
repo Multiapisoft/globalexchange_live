@@ -37,7 +37,7 @@ $fund_type_arr = get_fund_type();
         left: 0;
         right: 0;
         height: 2px;
-        background: linear-gradient(90deg, #4f46e5, transparent);
+        background: linear-gradient(90deg, #d4af37, transparent);
     }
 
     .wallet-cards {
@@ -63,7 +63,7 @@ $fund_type_arr = get_fund_type();
         left: 0;
         right: 0;
         height: 2px;
-        background: linear-gradient(90deg, #4f46e5, transparent);
+        background: linear-gradient(90deg, #d4af37, transparent);
     }
 
     .wallet-amount {
@@ -113,7 +113,7 @@ $fund_type_arr = get_fund_type();
 
     .form-control:focus {
         background: var(--hover-bg);
-        border-color: #4f46e5;
+        border-color: #d4af37;
         color: var(--text-primary);
         box-shadow: none;
     }
@@ -127,7 +127,7 @@ $fund_type_arr = get_fund_type();
     }
 
     .btn-transfer {
-        background: #4f46e5;
+        background: #d4af37;
         border: none;
         border-radius: 8px;
         color: #ffffff;
@@ -138,7 +138,7 @@ $fund_type_arr = get_fund_type();
     }
 
     .btn-transfer:hover {
-        background: #4338ca;
+        background: #b8860b;
         color: #ffffffff;
         transform: translateY(-1px);
     }

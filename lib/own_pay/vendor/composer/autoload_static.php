@@ -18,58 +18,58 @@ class ComposerStaticInite7b6cb0d9b2ef155b9a41f4f5b29edfa
     );
 
     public static $prefixLengthsPsr4 = array (
-        'p' => 
+        'p' =>
         array (
             'phpseclib\\' => 10,
         ),
-        'k' => 
+        'k' =>
         array (
             'kornrunner\\' => 11,
         ),
-        'W' => 
+        'W' =>
         array (
             'Web3p\\RLP\\' => 10,
             'Web3p\\EthereumUtil\\' => 19,
             'Web3p\\EthereumTx\\' => 17,
             'Web3\\' => 5,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
         ),
-        'M' => 
+        'M' =>
         array (
             'Mdanter\\Ecc\\' => 12,
         ),
-        'G' => 
+        'G' =>
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
         ),
-        'F' => 
+        'F' =>
         array (
             'FurqanSiddiqui\\ECDSA\\' => 21,
             'FurqanSiddiqui\\BIP39\\' => 21,
             'FurqanSiddiqui\\BIP32\\' => 21,
             'FG\\' => 3,
         ),
-        'E' => 
+        'E' =>
         array (
             'Elliptic\\' => 9,
         ),
-        'C' => 
+        'C' =>
         array (
             'Composer\\Semver\\' => 16,
             'Charcoal\\Buffers\\' => 17,
             'Charcoal\\Adapters\\GMP\\' => 22,
         ),
-        'B' => 
+        'B' =>
         array (
             'BitWasp\\Buffertools\\' => 20,
             'BitWasp\\Bitcoin\\' => 16,
@@ -79,113 +79,113 @@ class ComposerStaticInite7b6cb0d9b2ef155b9a41f4f5b29edfa
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpseclib\\' => 
+        'phpseclib\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'kornrunner\\' => 
+        'kornrunner\\' =>
         array (
             0 => __DIR__ . '/..' . '/kornrunner/keccak/src',
         ),
-        'Web3p\\RLP\\' => 
+        'Web3p\\RLP\\' =>
         array (
             0 => __DIR__ . '/..' . '/web3p/rlp/src',
         ),
-        'Web3p\\EthereumUtil\\' => 
+        'Web3p\\EthereumUtil\\' =>
         array (
             0 => __DIR__ . '/..' . '/web3p/ethereum-util/src',
         ),
-        'Web3p\\EthereumTx\\' => 
+        'Web3p\\EthereumTx\\' =>
         array (
             0 => __DIR__ . '/..' . '/web3p/ethereum-tx/src',
         ),
-        'Web3\\' => 
+        'Web3\\' =>
         array (
             0 => __DIR__ . '/..' . '/web3p/web3.php/src',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' => 
+        'Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'Mdanter\\Ecc\\' => 
+        'Mdanter\\Ecc\\' =>
         array (
             0 => __DIR__ . '/..' . '/mdanter/ecc/src',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'FurqanSiddiqui\\ECDSA\\' => 
+        'FurqanSiddiqui\\ECDSA\\' =>
         array (
             0 => __DIR__ . '/..' . '/furqansiddiqui/ecdsa-php/src',
         ),
-        'FurqanSiddiqui\\BIP39\\' => 
+        'FurqanSiddiqui\\BIP39\\' =>
         array (
             0 => __DIR__ . '/..' . '/furqansiddiqui/bip39-mnemonic-php/src',
         ),
-        'FurqanSiddiqui\\BIP32\\' => 
+        'FurqanSiddiqui\\BIP32\\' =>
         array (
             0 => __DIR__ . '/..' . '/furqansiddiqui/bip32-keypair-php/src',
         ),
-        'FG\\' => 
+        'FG\\' =>
         array (
             0 => __DIR__ . '/..' . '/fgrosse/phpasn1/lib',
         ),
-        'Elliptic\\' => 
+        'Elliptic\\' =>
         array (
             0 => __DIR__ . '/..' . '/simplito/elliptic-php/lib',
         ),
-        'Composer\\Semver\\' => 
+        'Composer\\Semver\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
-        'Charcoal\\Buffers\\' => 
+        'Charcoal\\Buffers\\' =>
         array (
             0 => __DIR__ . '/..' . '/charcoal-dev/buffers/src',
         ),
-        'Charcoal\\Adapters\\GMP\\' => 
+        'Charcoal\\Adapters\\GMP\\' =>
         array (
             0 => __DIR__ . '/..' . '/charcoal-dev/gmp-adapter/src',
         ),
-        'BitWasp\\Buffertools\\' => 
+        'BitWasp\\Buffertools\\' =>
         array (
             0 => __DIR__ . '/..' . '/bitwasp/buffertools/src/Buffertools',
         ),
-        'BitWasp\\Bitcoin\\' => 
+        'BitWasp\\Bitcoin\\' =>
         array (
             0 => __DIR__ . '/..' . '/bitwasp/bitcoin/src',
         ),
-        'BN\\' => 
+        'BN\\' =>
         array (
             0 => __DIR__ . '/..' . '/simplito/bn-php/lib',
         ),
-        'BI\\' => 
+        'BI\\' =>
         array (
             0 => __DIR__ . '/..' . '/simplito/bigint-wrapper-php/lib',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'P' => 
+        'P' =>
         array (
-            'Pleo' => 
+            'Pleo' =>
             array (
                 0 => __DIR__ . '/..' . '/pleonasm/merkle-tree/src',
             ),

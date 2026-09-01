@@ -68,9 +68,8 @@ if (isset($_POST)) {
         //     setMessage('Maximum withdrawal limit is 200 ' . $typearr[$type] . '.', 'error');
     } elseif ($wallet < $amount) {
         setMessage('Insufficient fund.', 'error');
-    } elseif (!verify_email_otp($otp, 'withdrawal', $user->email, $user)) {
-        setMessage('Invalid OTP.', 'error');
     } else {
+        // OTP verification skipped — direct withdrawal request
         my_query("UPDATE user SET $wallet_field=$wallet_field-'" . $amount . "' WHERE uid='" . $uid . "'");
         // 2% Admin & Service Charge (Business Plan)
         $fee = $amount * 0.02;
@@ -94,8 +93,10 @@ if (isset($_POST)) {
             }
         }
         coinpayments_new_withdrawal($withdraw_arr, $ct);
-        clear_email_otp($uid);
-        setMessage('Your withdrawal successfully and waiting time upto 24 hrs.', 'success');
+        if (function_exists('clear_email_otp')) {
+            clear_email_otp($uid);
+        }
+        setMessage('Your withdrawal request was submitted successfully. Processing time: 24 - 72 hours.', 'success');
     }
 }
 redirect('./withdrawal_block.php?type=' . $type);

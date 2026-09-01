@@ -77,6 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&  isset($_POST['password_reset'])) {
             margin-top: 15px;
         }
     </style>
+  <link href="../css/ge-theme.css" rel="stylesheet" type="text/css" />
+  <style>body{background:#050505!important;color:#f5f5f5!important}.panel,.panel-bd{background:#121212!important;border:1px solid rgba(212,175,55,.22)!important;border-radius:16px!important}.btn-primary{background:linear-gradient(135deg,#f5d76e,#d4af37,#c9970a)!important;border:none!important;color:#111!important;border-radius:12px!important}.form-control{background:#0a0a0a!important;border-color:rgba(212,175,55,.22)!important;color:#f5f5f5!important}</style>
 </head>
 
 <body>

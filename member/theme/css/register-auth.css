@@ -1,0 +1,336 @@
+/**
+ * Global Exchange — Register page (matches login card UI)
+ */
+
+.ge-register-panel {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.75rem;
+  overflow-y: auto;
+}
+
+.ge-register-panel .ge-login-card {
+  max-width: 420px;
+  width: 100%;
+  padding: 1.75rem 1.65rem 1.5rem;
+}
+
+.ge-register-form .ge-login-footer {
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ge-reg-step-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+.ge-reg-step-label i {
+  font-size: 1rem;
+}
+
+.ge-reg-step-label--sm {
+  margin-top: 0.25rem;
+}
+
+.ge-register-form .ge-login-field {
+  margin-bottom: 1rem;
+}
+
+.ge-register-form .ge-login-field label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.ge-register-form .ge-login-field .form-control {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 10px;
+  color: #fff;
+  padding: 0.85rem 1rem;
+  font-size: 1.05rem;
+  font-family: inherit;
+  height: auto;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ge-register-form .ge-login-field .form-control:focus {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.55);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+}
+
+.ge-register-form .ge-login-field .form-control::placeholder {
+  color: #6b7280;
+}
+
+.ge-password-wrap {
+  position: relative;
+}
+
+.ge-password-wrap .form-control {
+  padding-right: 2.75rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7280;
+  z-index: 2;
+}
+
+.password-toggle:hover {
+  color: #d4af37;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+}
+
+.password-strength-meter {
+  margin-top: 0.45rem;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.strength-bar {
+  height: 100%;
+  width: 0;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+  font-size: 0.82rem;
+  color: #b8bcc4;
+  margin-top: 0.3rem;
+  display: block;
+}
+
+.ge-reg-terms {
+  margin: 0.5rem 0 1rem;
+  align-items: flex-start;
+}
+
+.ge-reg-terms label {
+  font-size: 0.98rem;
+  color: #b8bcc4;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.ge-reg-terms label a {
+  color: #f5c842 !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ge-reg-terms label a:hover {
+  color: #ffe566 !important;
+}
+
+.ge-reg-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.ge-reg-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 10px;
+  background: transparent;
+  color: #e5e5e5;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ge-reg-back:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.ge-register-form .btn-login-gold:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.sec2,
+.sec3 {
+  display: none;
+}
+
+.showSection {
+  display: block;
+  animation: ge-reg-slide 0.35s ease forwards;
+}
+
+@keyframes ge-reg-slide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Select2 — match login inputs */
+.select2-container--default .select2-selection--single {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+  border-radius: 10px !important;
+  height: auto !important;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--single {
+  border-color: rgba(212, 175, 55, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #fff !important;
+  line-height: 1.4 !important;
+  padding: 0.85rem 1rem !important;
+  font-size: 1.05rem !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: #6b7280 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 100% !important;
+  top: 0 !important;
+  right: 10px !important;
+}
+
+.select2-dropdown,
+.trading-dropdown {
+  background: #141414 !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+  border-radius: 10px !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background: #d4af37 !important;
+  color: #1a1408 !important;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  color: #fff;
+  border-radius: 8px;
+}
+
+.select2-container {
+  width: 100% !important;
+}
+
+@media (max-width: 991px) {
+  .ge-register-panel {
+    min-height: 100dvh;
+    min-height: 100svh;
+    justify-content: center;
+    align-items: center;
+    gap: 0.65rem;
+    padding:
+      max(1rem, env(safe-area-inset-top))
+      max(0.85rem, env(safe-area-inset-right))
+      max(1.1rem, env(safe-area-inset-bottom))
+      max(0.85rem, env(safe-area-inset-left));
+  }
+
+  .ge-register-panel .ge-login-card {
+    max-width: min(420px, 100%);
+  }
+}
+
+@media (max-width: 480px) {
+  .ge-register-panel {
+    padding:
+      max(0.75rem, env(safe-area-inset-top))
+      max(0.65rem, env(safe-area-inset-right))
+      max(0.85rem, env(safe-area-inset-bottom))
+      max(0.65rem, env(safe-area-inset-left));
+    gap: 0.5rem;
+  }
+
+  .ge-register-panel .ge-login-card {
+    padding: 1.25rem 1rem 1.1rem;
+    border-radius: 14px;
+  }
+
+  .ge-reg-step-label {
+    font-size: 0.88rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .ge-register-form .ge-login-field {
+    margin-bottom: 0.9rem;
+  }
+
+  .ge-register-form .ge-login-field label {
+    font-size: 0.98rem;
+  }
+
+  .ge-register-form .ge-login-field .form-control,
+  .ge-register-form .btn-login-gold,
+  .ge-reg-back {
+    font-size: 17px;
+  }
+
+  .ge-reg-terms label {
+    font-size: 0.95rem;
+  }
+
+  .ge-register-form .ge-login-footer {
+    margin-top: 0.85rem;
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .ge-register-panel .ge-login-card {
+    padding: 1.1rem 0.85rem 1rem;
+  }
+
+  .ge-reg-step-label {
+    font-size: 0.84rem;
+  }
+}

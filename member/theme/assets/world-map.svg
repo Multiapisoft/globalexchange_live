@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none" opacity="0.07">
+  <defs>
+    <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.2" fill="#D4AF37"/>
+    </pattern>
+  </defs>
+  <!-- Simplified continents as dotted silhouettes -->
+  <ellipse cx="280" cy="220" rx="140" ry="90" fill="url(#dots)"/>
+  <ellipse cx="480" cy="180" rx="80" ry="55" fill="url(#dots)"/>
+  <ellipse cx="620" cy="250" rx="160" ry="100" fill="url(#dots)"/>
+  <ellipse cx="780" cy="320" rx="90" ry="70" fill="url(#dots)"/>
+  <ellipse cx="920" cy="280" rx="130" ry="80" fill="url(#dots)"/>
+  <ellipse cx="350" cy="400" rx="70" ry="100" fill="url(#dots)"/>
+  <ellipse cx="1050" cy="420" rx="80" ry="50" fill="url(#dots)"/>
+</svg>

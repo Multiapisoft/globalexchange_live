@@ -4,7 +4,6 @@ $title = "Hot News";
 include_once 'header.php';
 $row = my_fetch_object(my_query("SELECT * FROM hot_news WHERE recid=1"));
 $status_arr = array('Active', 'Block');
-die;
 ?>
 <div class="row">
     <div class="col-sm-12">

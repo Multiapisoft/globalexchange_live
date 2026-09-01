@@ -51,7 +51,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed, #06b6d4);
+            background: linear-gradient(90deg, #f5d76e, #d4af37, #b8860b);
         }
 
         .terms-header {
@@ -70,7 +70,7 @@
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: linear-gradient(135deg, #f5d76e, #d4af37, #b8860b);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -108,7 +108,7 @@
         }
 
         .section-number {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: linear-gradient(135deg, #f5d76e, #d4af37, #b8860b);
             color: white;
             width: 30px;
             height: 30px;
@@ -142,19 +142,19 @@
         }
 
         .section-content li::marker {
-            color: #4f46e5;
+            color: #d4af37;
         }
 
         .highlight-box {
-            background: rgba(79, 70, 229, 0.05);
-            border: 1px solid rgba(79, 70, 229, 0.2);
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
         }
 
         .highlight-box h4 {
-            color: #4f46e5;
+            color: #d4af37;
             font-weight: 600;
             margin-bottom: 10px;
             font-size: 16px;
@@ -184,7 +184,7 @@
         }
 
         .contact-item i {
-            color: #4f46e5;
+            color: #d4af37;
             width: 20px;
             text-align: center;
         }
@@ -193,7 +193,7 @@
             position: fixed;
             top: 30px;
             left: 30px;
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #f5d76e 0%, #d4af37 45%, #b8860b 100%);
             color: white;
             border: none;
             padding: 12px 20px;
@@ -203,15 +203,15 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
             transition: all 0.3s ease;
             z-index: 1000;
         }
 
         .back-button:hover {
-            background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 12px 25px rgba(212, 175, 55, 0.4);
             color: white;
             text-decoration: none;
         }

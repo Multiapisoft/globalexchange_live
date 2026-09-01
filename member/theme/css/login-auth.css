@@ -1,0 +1,443 @@
+/**
+ * Global Exchange — Login page (matches dashboard theme)
+ */
+
+body.ge-login-page {
+  margin: 0;
+  min-height: 100vh;
+  background: #0a0a0a !important;
+  color: #fff;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+body.ge-login-page::before {
+  display: none !important;
+}
+
+.ge-login-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+body.ge-login-page .ge-login-panel {
+  flex: 1;
+  max-width: none;
+  width: 100%;
+}
+
+/* Forex chart panel (hidden for now on login/register) */
+.ge-login-chart {
+  display: none !important;
+  position: relative;
+  flex: 1 1 58%;
+  min-height: 100vh;
+  min-width: 0;
+  background: #050505;
+  border-right: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.ge-login-chart::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 10, 10, 0.15) 0%, transparent 35%),
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55) 0%, transparent 28%, rgba(10, 10, 10, 0.35) 100%);
+}
+
+.ge-login-chart-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.35rem;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.92) 0%, transparent 100%);
+}
+
+.ge-login-chart-head .pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ge-login-chart-head .pair span {
+  color: #22c55e;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.ge-login-chart-head .live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+  animation: ge-live-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes ge-live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.92); }
+}
+
+.ge-tradingview-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ge-tradingview-wrap .tradingview-widget-container,
+.ge-tradingview-wrap .tradingview-widget-container__widget {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Login panel */
+.ge-login-panel {
+  flex: 0 0 42%;
+  max-width: 520px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.75rem;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.52) 0%, rgba(10, 10, 10, 0.35) 45%, rgba(10, 10, 10, 0.55) 100%),
+    url("../../images/background.jpg") center / cover no-repeat;
+}
+
+.ge-login-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 45% at 100% 0%, rgba(212, 175, 55, 0.1), transparent 55%),
+    radial-gradient(ellipse 55% 35% at 0% 100%, rgba(212, 175, 55, 0.06), transparent 50%);
+}
+
+.ge-login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.75rem 1.65rem 1.5rem;
+}
+
+.ge-login-logo {
+  display: block;
+  width: 148px;
+  max-width: 72%;
+  height: auto;
+  margin: 0 auto 1.15rem;
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.35));
+}
+
+.ge-login-title {
+  margin: 0 0 0.4rem;
+  text-align: center;
+  font-size: clamp(1.65rem, 4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.ge-login-subtitle {
+  margin: 0 0 1.35rem;
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: #b8bcc4;
+}
+
+.text-gold {
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ge-login-field {
+  margin-bottom: 1rem;
+}
+
+.ge-login-field label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.ge-login-field .form-control {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 10px;
+  color: #fff;
+  padding: 0.85rem 1rem;
+  font-size: 1.05rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ge-login-field .form-control:focus {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.55);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.ge-login-field .form-control::placeholder {
+  color: #6b7280;
+}
+
+.ge-login-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.25rem 0 1.15rem;
+  flex-wrap: wrap;
+}
+
+.ge-login-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.98rem;
+  color: #b8bcc4;
+  cursor: pointer;
+}
+
+.ge-login-check input {
+  accent-color: #d4af37;
+}
+
+.ge-login-forgot {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #d4af37 !important;
+  text-decoration: none !important;
+}
+
+.ge-login-forgot:hover {
+  color: #f5c842 !important;
+}
+
+.btn-login-gold {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 45%, #b8860b 100%);
+  color: #1a1408 !important;
+  font-size: 1.08rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-login-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(212, 175, 55, 0.38);
+}
+
+.ge-login-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #b8bcc4;
+}
+
+.ge-login-footer a {
+  color: #f5c842 !important;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.ge-login-footer a:hover {
+  color: #ffe566 !important;
+}
+
+.ge-login-copy {
+  position: relative;
+  z-index: 1;
+  margin-top: 0;
+  padding-top: 0.35rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: #9ca3af;
+  line-height: 1.5;
+}
+
+.ge-login-tagline {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #d4af37;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Tablet & mobile */
+@media (max-width: 991px) {
+  .ge-login-shell {
+    flex-direction: column;
+    min-height: 100dvh;
+    min-height: 100svh;
+  }
+
+  .ge-login-chart {
+    display: none !important;
+  }
+
+  .ge-login-panel {
+    flex: 1;
+    max-width: none;
+    width: 100%;
+    min-height: 100dvh;
+    min-height: 100svh;
+    justify-content: center;
+    align-items: center;
+    gap: 0.65rem;
+    padding:
+      max(1rem, env(safe-area-inset-top))
+      max(0.85rem, env(safe-area-inset-right))
+      max(1.1rem, env(safe-area-inset-bottom))
+      max(0.85rem, env(safe-area-inset-left));
+    background:
+      linear-gradient(180deg, rgba(10, 10, 10, 0.72) 0%, rgba(10, 10, 10, 0.55) 50%, rgba(10, 10, 10, 0.78) 100%),
+      url("../../images/background.jpg") center / cover no-repeat;
+  }
+
+  .ge-login-card {
+    max-width: min(420px, 100%);
+    width: 100%;
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .ge-login-panel {
+    padding:
+      max(0.75rem, env(safe-area-inset-top))
+      max(0.65rem, env(safe-area-inset-right))
+      max(0.85rem, env(safe-area-inset-bottom))
+      max(0.65rem, env(safe-area-inset-left));
+    gap: 0.5rem;
+  }
+
+  .ge-login-card {
+    padding: 1.25rem 1rem 1.1rem;
+    border-radius: 14px;
+  }
+
+  .ge-login-logo {
+    width: 118px;
+    margin-bottom: 0.85rem;
+  }
+
+  .ge-login-title {
+    font-size: 1.55rem;
+  }
+
+  .ge-login-subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.1rem;
+  }
+
+  .ge-login-field {
+    margin-bottom: 0.9rem;
+  }
+
+  .ge-login-field label {
+    font-size: 0.98rem;
+  }
+
+  .ge-login-field .form-control,
+  .btn-login-gold {
+    font-size: 17px;
+  }
+
+  .ge-login-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+  }
+
+  .ge-login-forgot {
+    align-self: flex-end;
+  }
+
+  .btn-login-gold {
+    padding: 0.88rem 1rem;
+  }
+
+  .ge-login-footer {
+    margin-top: 1rem;
+    font-size: 0.98rem;
+  }
+
+  .ge-login-tagline {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+  }
+
+  .ge-login-copy {
+    font-size: 0.84rem;
+    padding: 0 0.25rem;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  .ge-login-card {
+    padding: 1.1rem 0.85rem 1rem;
+  }
+
+  .ge-login-logo {
+    width: 112px;
+  }
+
+  .ge-login-title {
+    font-size: 1.4rem;
+  }
+
+  .ge-login-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .ge-login-check {
+    font-size: 0.92rem;
+  }
+}

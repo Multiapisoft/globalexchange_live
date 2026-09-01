@@ -1,0 +1,1025 @@
+/**
+ * Bridge + responsive fixes for member PHP shell
+ * Keeps menu/forms working; themes visuals only.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --bg-deep: #0a0a0a;
+  --bg-panel: #111111;
+  --bg-card: #141414;
+  --bg-sidebar: #0d0d0d;
+  --border: rgba(212, 175, 55, 0.22);
+  --gold: #d4af37;
+  --gold-bright: #f5c842;
+  --gold-deep: #b8860b;
+  --text: #ffffff;
+  --text-muted: #9ca3af;
+  --sidebar-w: 268px;
+  --nav-h: 64px;
+  --bottom-nav-h: 68px;
+
+  --ge-bg: #0a0a0a;
+  --ge-gold: #d4af37;
+  --ge-font: "Montserrat", system-ui, sans-serif;
+  --primary-bg: #0a0a0a;
+  --secondary-bg: #0d0d0d;
+  --hover-bg: rgba(255, 255, 255, 0.04);
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --accent-color: #d4af37;
+  --border-color: rgba(212, 175, 55, 0.22);
+  --card-bg: #141414;
+  --brand-primary: #d4af37;
+  --brand-secondary: #b8860b;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Montserrat", system-ui, sans-serif !important;
+  background: #0a0a0a !important;
+  color: #fff !important;
+  font-size: 16px !important;
+  line-height: 1.55 !important;
+}
+
+#wrapper {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Navbar ===== */
+.navbar.navbar-fixed-top,
+.navbar {
+  background: rgba(10, 10, 10, 0.92) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  height: var(--nav-h) !important;
+  min-height: var(--nav-h) !important;
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  z-index: 1100 !important;
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  position: fixed !important;
+  margin: 0 !important;
+}
+
+#mobileMenuToggle,
+.navbar-toggle {
+  display: none !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  color: #f5c842 !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 1110 !important;
+  flex-shrink: 0 !important;
+}
+
+#mobileMenuToggle i,
+.navbar-toggle .material-icons {
+  color: #f5c842 !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.navbar-brand {
+  padding: 0 !important;
+  margin: 0 8px 0 0 !important;
+  height: auto !important;
+  flex-shrink: 0;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  min-width: 0;
+}
+
+.navbar-brand img.main-logo,
+.navbar-brand img {
+  height: 40px !important;
+  width: auto !important;
+  max-height: 42px !important;
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
+}
+
+.ge-navbar-brand-text {
+  display: flex !important;
+  flex-direction: column !important;
+  line-height: 1.15 !important;
+  min-width: 0;
+}
+
+.ge-navbar-brand-text strong {
+  color: #fff !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ge-navbar-brand-text small {
+  color: #d4af37 !important;
+  font-size: 0.58rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  margin-top: 2px !important;
+  white-space: nowrap;
+}
+
+.navbar-top-links {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 0 0 auto !important;
+  float: none !important;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.ge-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.navbar-top-links > li {
+  float: none !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.navbar-top-links > li > a {
+  padding: 6px 8px !important;
+}
+
+.ge-welcome-inline {
+  color: #c4c4c4 !important;
+  font-size: 1rem !important;
+  white-space: nowrap;
+}
+
+.ge-welcome-inline strong { color: #fff !important; }
+
+.ge-user-chip {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+}
+
+.ge-user-avatar {
+  background: linear-gradient(135deg, #ffe566, #d4af37, #b8860b) !important;
+  color: #1a1408 !important;
+}
+
+.custom-logout-btn {
+  background: transparent !important;
+  border: 1px solid rgba(212, 175, 55, 0.65) !important;
+  color: #f5c842 !important;
+  box-shadow: none !important;
+  border-radius: 999px !important;
+}
+
+.custom-logout-btn:hover {
+  background: rgba(212, 175, 55, 0.12) !important;
+  color: #f5c842 !important;
+  filter: none !important;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: var(--sidebar-w) !important;
+  background: #0d0d0d !important;
+  border-right: 1px solid rgba(212, 175, 55, 0.12) !important;
+  box-shadow: none !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  z-index: 1105 !important;
+  transform: none !important;
+  inset: auto !important;
+}
+
+.sidebar.expanded {
+  width: var(--sidebar-w) !important;
+}
+
+.sidebar-inner {
+  height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ge-sidebar-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  min-height: var(--nav-h) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  background: #0d0d0d !important;
+}
+
+.ge-sidebar-scroll {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}
+
+.ge-sidebar-scroll::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+  background: transparent !important;
+}
+
+.sidebar-inner::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+
+#side-menu > li {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.ge-sidebar-brand img {
+  width: 42px !important;
+  height: 42px !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.45)) !important;
+}
+
+.ge-sidebar-brand-text strong {
+  display: block !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+  line-height: 1.25 !important;
+}
+
+.ge-sidebar-brand-text span {
+  display: block !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  color: #d4af37 !important;
+  text-transform: uppercase !important;
+  margin-top: 4px !important;
+  opacity: 1 !important;
+}
+
+#side-menu {
+  padding: 8px 10px 12px !important;
+  margin: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+#side-menu > li > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.8rem 0.95rem !important;
+  margin: 2px 0 !important;
+  border-radius: 10px !important;
+  border-left: none !important;
+  color: #c4c4c4 !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+#side-menu > li > a i {
+  color: inherit !important;
+  opacity: 0.8 !important;
+  font-size: 17px !important;
+  min-width: 20px !important;
+  width: 20px !important;
+  text-align: center !important;
+}
+
+#side-menu > li > a:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  box-shadow: none !important;
+}
+
+#side-menu > li > a.active,
+#side-menu > li.active > a,
+#side-menu > li > a[aria-expanded="true"] {
+  color: #f5c842 !important;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.22), rgba(212, 175, 55, 0.06)) !important;
+  box-shadow: inset 3px 0 0 #d4af37 !important;
+}
+
+#side-menu .nav-second-level li.active > a,
+#side-menu .nav-second-level a.active {
+  color: #f5c842 !important;
+  background: rgba(212, 175, 55, 0.12) !important;
+  border-radius: 8px !important;
+}
+
+#side-menu .nav-second-level li.active > a i,
+#side-menu .nav-second-level a.active i {
+  color: #f5c842 !important;
+}
+
+#side-menu .menu-text {
+  display: block !important;
+  opacity: 1 !important;
+  color: inherit !important;
+  flex: 1 1 auto !important;
+}
+
+#side-menu .fa.arrow {
+  display: inline-block !important;
+  opacity: 0.55 !important;
+  margin-left: auto !important;
+  font-size: 10px !important;
+}
+
+.sidebar .nav-second-level {
+  position: static !important;
+  left: auto !important;
+  max-height: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  display: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px 0 6px 10px !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+.sidebar .nav-second-level.show {
+  display: block !important;
+}
+
+.nav-second-level li a {
+  color: #9ca3af !important;
+  font-size: 0.9rem !important;
+  border-radius: 8px !important;
+  padding: 0.55rem 0.9rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  pointer-events: auto !important;
+}
+
+.nav-second-level li a:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Kill old flyout/opacity bugs that hide submenu items */
+.sidebar .nav-second-level li {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+.sidebar:not(.expanded) .nav-second-level,
+.sidebar.expanded .nav-second-level {
+  position: static !important;
+  left: auto !important;
+  min-width: 0 !important;
+  max-height: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.ge-sidebar-help {
+  margin: 8px 12px 16px !important;
+  padding: 1rem !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+  background: linear-gradient(180deg, rgba(30, 25, 10, 0.9), rgba(15, 15, 15, 0.95)) !important;
+  text-align: left !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.ge-sidebar-help h5 {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+.ge-sidebar-help p {
+  font-size: 0.88rem !important;
+  color: #9ca3af !important;
+}
+
+.ge-sidebar-help a {
+  pointer-events: auto !important;
+  font-size: 0.92rem !important;
+}
+
+/* ===== Page content ===== */
+#wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#page-wrapper {
+  background: transparent !important;
+  /* Fixed navbar clearance — keep in sync with header.php */
+  padding-top: 80px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-bottom: 28px !important;
+  margin-top: 0 !important;
+  min-height: 100vh;
+  width: auto !important;
+  box-sizing: border-box !important;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Panel background — member/images/background.jpg (main content only) */
+#page-wrapper::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.52) 0%, rgba(10, 10, 10, 0.35) 45%, rgba(10, 10, 10, 0.55) 100%),
+    linear-gradient(135deg, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+    url("../../images/background.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#page-wrapper::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 65% 40% at 92% 8%, rgba(212, 175, 55, 0.08), transparent 55%),
+    radial-gradient(ellipse 55% 35% at 8% 92%, rgba(212, 175, 55, 0.05), transparent 50%);
+}
+
+@media (min-width: 992px) {
+  #page-wrapper::before,
+  #page-wrapper::after {
+    left: var(--sidebar-w);
+  }
+}
+
+@media (max-width: 991px) {
+  #page-wrapper::before {
+    background-attachment: scroll;
+    position: absolute;
+    inset: 0;
+  }
+
+  #page-wrapper::after {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.content {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Modal above navbar / bottom-nav */
+.modal-backdrop { z-index: 1300 !important; }
+.modal { z-index: 1310 !important; }
+
+.content-header {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  visibility: hidden !important;
+}
+
+.ge-bottom-nav {
+  background: rgba(10, 10, 10, 0.96) !important;
+  border-top: 1px solid rgba(212, 175, 55, 0.15) !important;
+  z-index: 1200 !important;
+}
+
+.ge-bottom-nav a.active,
+.ge-bottom-nav a:hover {
+  color: #f5c842 !important;
+}
+
+/* Scroll-to-top — polished + interactive */
+.ge-scroll-top,
+#toTop.ge-scroll-top,
+#toTop {
+  position: fixed !important;
+  z-index: 1250 !important;
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  outline: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(145deg, #ffe566 0%, #d4af37 45%, #b8860b 100%) !important;
+  color: #1a1408 !important;
+  box-shadow:
+    0 4px 18px rgba(212, 175, 55, 0.4),
+    0 0 0 1px rgba(212, 175, 55, 0.35) inset !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(18px) scale(0.88) !important;
+  pointer-events: none !important;
+  transition:
+    opacity 0.28s ease,
+    visibility 0.28s ease,
+    transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 0.22s ease !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ge-scroll-top.is-visible,
+#toTop.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+
+.ge-scroll-top:hover,
+#toTop.is-visible:hover {
+  transform: translateY(-4px) scale(1.08) !important;
+  box-shadow:
+    0 8px 26px rgba(212, 175, 55, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset !important;
+}
+
+.ge-scroll-top:active,
+.ge-scroll-top.is-pressed,
+#toTop.is-visible:active,
+#toTop.is-pressed {
+  transform: translateY(-1px) scale(0.94) !important;
+  box-shadow:
+    0 3px 12px rgba(212, 175, 55, 0.35),
+    0 0 0 1px rgba(212, 175, 55, 0.5) inset !important;
+}
+
+.ge-scroll-top:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(10, 10, 10, 0.95),
+    0 0 0 5px rgba(212, 175, 55, 0.75),
+    0 6px 22px rgba(212, 175, 55, 0.45) !important;
+}
+
+.ge-scroll-top i {
+  font-size: 17px !important;
+  line-height: 1 !important;
+  color: #1a1408 !important;
+  transition: transform 0.25s ease !important;
+}
+
+.ge-scroll-top:hover i,
+.ge-scroll-top.is-pressed i {
+  transform: translateY(-1px) !important;
+}
+
+.ge-scroll-top-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(212, 175, 55, 0.45);
+  opacity: 0;
+  transform: scale(0.85);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ge-scroll-top.is-visible .ge-scroll-top-glow {
+  opacity: 1;
+  animation: ge-scroll-pulse 2s ease-out infinite;
+}
+
+@keyframes ge-scroll-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.75;
+  }
+  70% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  .ge-scroll-top,
+  #toTop.ge-scroll-top,
+  #toTop {
+    bottom: calc(var(--bottom-nav-h) + 16px) !important;
+    right: 16px !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .ge-scroll-top i {
+    font-size: 16px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .ge-scroll-top,
+  #toTop.ge-scroll-top,
+  #toTop {
+    bottom: 28px !important;
+    right: 28px !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ge-scroll-top,
+  #toTop {
+    transition: opacity 0.15s ease, visibility 0.15s ease !important;
+  }
+
+  .ge-scroll-top-glow {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1040;
+}
+
+.sidebar-backdrop.show {
+  display: block !important;
+}
+
+/* ===== Desktop ===== */
+@media (min-width: 992px) {
+  #mobileMenuToggle,
+  .navbar-toggle {
+    display: none !important;
+  }
+
+  /* Logo lives in sidebar (aligned with sidebar column) */
+  .navbar-brand {
+    display: none !important;
+  }
+
+  .ge-sidebar-brand,
+  .sidebar .ge-sidebar-brand {
+    display: flex !important;
+  }
+
+  /* Header only spans main content — not over sidebar */
+  .navbar.navbar-fixed-top,
+  .navbar {
+    left: var(--sidebar-w) !important;
+    width: calc(100% - var(--sidebar-w)) !important;
+    right: 0 !important;
+  }
+
+  .sidebar,
+  .sidebar.expanded {
+    display: block !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: var(--sidebar-w) !important;
+    height: 100vh !important;
+    transform: none !important;
+    z-index: 1105 !important;
+  }
+
+  #page-wrapper {
+    margin-left: var(--sidebar-w) !important;
+    padding-top: 80px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    padding-bottom: 40px !important;
+  }
+}
+
+/* ===== Tablet / Mobile ===== */
+@media (max-width: 991px) {
+  #mobileMenuToggle,
+  .navbar-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .navbar.navbar-fixed-top,
+  .navbar.ge-topbar,
+  .navbar {
+    left: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    padding: 0 10px !important;
+  }
+
+  .ge-nav-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .navbar-brand {
+    display: flex !important;
+    align-items: center !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .navbar-brand img.main-logo,
+  .navbar-brand img {
+    height: 34px !important;
+    max-height: 34px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .ge-navbar-brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .ge-navbar-brand-text strong {
+    font-size: 0.72rem !important;
+    line-height: 1.15 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .ge-navbar-brand-text small {
+    display: none !important;
+  }
+
+  .ge-sidebar-brand,
+  .sidebar .ge-sidebar-brand {
+    display: flex !important;
+  }
+
+  .ge-nav-welcome,
+  .ge-welcome-inline,
+  .ge-user-meta {
+    display: none !important;
+  }
+
+  .navbar-top-links {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+    gap: 2px !important;
+    padding: 0 !important;
+  }
+
+  .navbar-top-links > li {
+    margin: 0 !important;
+  }
+
+  .navbar-top-links > li > a {
+    padding: 4px 5px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .navbar-top-links .material-icons {
+    font-size: 22px !important;
+    line-height: 1 !important;
+  }
+
+  .navbar-top-links .label-danger {
+    font-size: 9px !important;
+    min-width: 14px !important;
+    height: 14px !important;
+    line-height: 14px !important;
+    padding: 0 3px !important;
+    top: 2px !important;
+    right: 2px !important;
+  }
+
+  .ge-user-chip {
+    padding: 2px !important;
+    border: none !important;
+    gap: 0 !important;
+  }
+
+  .ge-user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .custom-logout-btn {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    border-width: 1px !important;
+  }
+
+  .custom-logout-btn .logout-icon-wrapper {
+    margin: 0 !important;
+  }
+
+  .custom-logout-btn i {
+    font-size: 14px !important;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    left: 0 !important;
+    top: var(--nav-h) !important;
+    width: min(300px, 86vw) !important;
+    height: calc(100vh - var(--nav-h)) !important;
+    transform: translateX(-110%) !important;
+    transition: transform 0.28s ease !important;
+    display: block !important;
+    z-index: 1105 !important;
+  }
+
+  .sidebar.in,
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  #page-wrapper {
+    margin-left: 0 !important;
+    padding-top: 80px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    padding-bottom: calc(var(--bottom-nav-h) + 24px) !important;
+    width: 100% !important;
+  }
+
+  .ge-bottom-nav a span {
+    font-size: 10px !important;
+    line-height: 1.1 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 0 8px !important;
+    gap: 6px !important;
+  }
+
+  .ge-nav-left {
+    gap: 6px !important;
+  }
+
+  .navbar-brand img.main-logo,
+  .navbar-brand img {
+    height: 30px !important;
+    max-height: 30px !important;
+  }
+
+  .ge-navbar-brand-text strong {
+    font-size: 0.65rem !important;
+  }
+
+  .navbar-top-links {
+    gap: 0 !important;
+  }
+
+  .navbar-top-links > li > a {
+    padding: 3px 4px !important;
+  }
+
+  .ge-user-avatar {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .custom-logout-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+  }
+
+  .ge-user-chip {
+    padding: 4px !important;
+  }
+
+  #page-wrapper {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .ge-bottom-nav a span {
+    font-size: 9px !important;
+  }
+}

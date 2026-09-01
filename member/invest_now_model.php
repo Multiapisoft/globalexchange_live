@@ -110,6 +110,12 @@ if (isset($_POST) && $iRow) {
         
         my_query("INSERT INTO investments (uid, amount, amount2, ipid, datetime, type, uid2, trade_status, amount_coin, bonus, invest_hour, exchange_pair, exchange_coin) VALUES ('$uid', '$amount', '$amount', '$recid', '" . date('c') . "', '$type', '$_uid', 1, '" . $camt . "', '" . $bamt . "', '" . $time . "', '" . $exchange_pair . "', '" . $exchange_coin . "')");
 
+        // Auto-activate trade on purchase (Self/Bot trading packages)
+        if (in_array((int) $recid, [2, 3], true)) {
+            my_query("UPDATE user SET trade_status = 1, trade_status_updated_at = NOW() WHERE uid = '" . (int) $uid . "'");
+            my_query("UPDATE investments SET trade_status = 1 WHERE uid = '" . (int) $uid . "' AND status = 0 AND is_closed = 0 AND ipid IN (2, 3)");
+        }
+
         // Bot Activation (ipid=1): no ROI / MLM income per Business Plan.
         // Trading packages (Silver/Gold): income via Trading ROI + Level ROI only.
        

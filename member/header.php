@@ -19,12 +19,15 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
     <title>
         <?php echo $title_name = isset($title) ? SITE_NAME . ' | ' . str_replace('COIN_NAME', SITE_CURRENCY, $title) : SITE_NAME . ' | Member Panel'; ?>
     </title>
-    <link rel="shortcut icon" href="images/nexabot-logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="theme/assets/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
     <script>
         WebFont.load({
             google: {
-                families: ['Alegreya+Sans:100,100i,300,300i,400,400i,500,500i,700,700i,800,800i,900,900i', 'Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i', 'Open Sans']
+                families: ['Montserrat:400,500,600,700,800', 'Open Sans']
             }
         });
     </script>
@@ -48,6 +51,11 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
     <link href="../assets/dist/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="css/ge-theme.css" rel="stylesheet" type="text/css" />
+    <link href="theme/css/panel.css" rel="stylesheet" type="text/css" />
+    <link href="theme/css/panel-bridge.css" rel="stylesheet" type="text/css" />
+    <link href="theme/css/pages-theme.css" rel="stylesheet" type="text/css" />
+    <link href="theme/css/reports-theme.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <?php /*<link id="defaultTheme" href="../assets/dist/css/skins/skin-red-dark.css" rel="stylesheet" type="text/css"/>*/ ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -64,17 +72,19 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
         :root {
-            /* Dark theme variables */
-            --primary-bg: #0b0e11;
-            --secondary-bg: #1e2329;
-            --hover-bg: #2b3139;
-            --text-primary: #eaecef;
-            --text-secondary: #848e9c;
-            --accent-color: #f0b90b;
-            --border-color: #2c3137;
-            --success-color: #02c076;
-            --danger-color: #f6465d;
-            --card-bg: #2b3139;
+            /* Global Exchange theme (Desktop panel) */
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #0d0d0d;
+            --hover-bg: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --accent-color: #d4af37;
+            --border-color: rgba(212, 175, 55, 0.22);
+            --success-color: #22c55e;
+            --danger-color: #ef4444;
+            --card-bg: #141414;
+            --brand-primary: #d4af37;
+            --brand-secondary: #b8860b;
         }
 
         /* Light theme variables */
@@ -125,9 +135,9 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             }
         }
 
-        /* Enhanced Navbar */
+        /* Enhanced Navbar — dark + gold */
         .navbar {
-            background-color: #5b60e8;
+            background-color: rgba(8, 8, 8, 0.95);
             border-bottom: 1px solid var(--border-color);
             height: 64px;
             padding: 0 24px;
@@ -136,24 +146,54 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             top: 0;
             z-index: 1100;
             display: flex;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(14px);
         }
 
-        @media (min-width: 769px) {
+        @media (min-width: 992px) {
             #page-wrapper {
                 position: inherit;
-                margin-left: 70px;
-                padding: 0 30px 30px;
+                margin-left: 268px !important;
+                padding: 80px 24px 40px 24px !important;
             }
 
             .sidebar {
-                width: 80px;
+                width: 268px;
                 left: 0 !important;
+                top: 0 !important;
+                height: 100vh !important;
                 display: block !important;
+                transform: none !important;
+                z-index: 1105 !important;
+            }
+
+            .sidebar .menu-text,
+            .sidebar .fa.arrow,
+            .sidebar .ge-sidebar-help {
+                display: block !important;
+                opacity: 1 !important;
+            }
+
+            .sidebar .ge-sidebar-brand,
+            .ge-sidebar-brand {
+                display: flex !important;
+            }
+
+            .navbar-brand {
+                display: none !important;
+            }
+
+            .navbar.navbar-fixed-top,
+            .navbar {
+                left: 268px !important;
+                width: calc(100% - 268px) !important;
+            }
+
+            #mobileMenuToggle {
+                display: none !important;
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
             .menu-text {
                 display: block !important;
                 opacity: 1 !important;
@@ -162,7 +202,7 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
 
             #page-wrapper {
                 margin-left: 0 !important;
-                padding: 10px 15px 30px 15px !important;
+                padding: 80px 12px 100px 12px !important;
                 width: 100% !important;
             }
 
@@ -170,42 +210,257 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                 width: 100%;
                 padding: 0;
             }
+
+            #mobileMenuToggle {
+                display: inline-flex !important;
+            }
         }
 
         .navbar-brand {
-            padding: 12px 0;
+            padding: 8px 0;
             display: flex;
             align-items: center;
+            gap: 10px;
+            text-decoration: none !important;
+            min-width: 0;
         }
 
         .navbar-brand img {
-            height: 70px;
+            height: 40px;
+            width: auto;
             transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.45));
         }
 
         .navbar-brand img:hover {
             transform: scale(1.05);
         }
 
-        /* Enhanced Sidebar */
+        .ge-navbar-brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+            min-width: 0;
+        }
+
+        .ge-navbar-brand-text strong {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ge-navbar-brand-text small {
+            color: #d4af37;
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+
+        .ge-welcome-inline {
+            display: inline-flex;
+            align-items: center;
+            height: 64px;
+            padding: 0 12px;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            white-space: nowrap;
+        }
+
+        .ge-welcome-inline strong {
+            color: #fff;
+            margin-left: 4px;
+        }
+
+        .ge-user-chip {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px !important;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.03);
+            text-decoration: none !important;
+        }
+
+        .ge-user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f5d76e, #b8860b);
+            color: #111;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .ge-user-meta {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+
+        .ge-user-meta strong {
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .ge-user-meta small {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+        }
+
+        #side-menu > li > a:hover,
+        #side-menu > li > a.active {
+            background: rgba(240, 185, 11, 0.12) !important;
+            border-left-color: var(--accent-color) !important;
+            color: var(--accent-color) !important;
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* Enhanced Sidebar — premium dark + gold */
         .sidebar {
-            width: 80px;
+            width: 260px;
             position: fixed;
-            height: 100%;
+            height: 100vh;
             left: 0;
-            top: 64px;
-            background-color: var(--secondary-bg);
+            top: 0;
+            background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+            border-right: 1px solid var(--border-color);
             transition: all 0.3s ease;
-            z-index: 1050;
-            overflow-y: auto;
+            z-index: 1105;
+            overflow: hidden;
         }
 
         .sidebar-inner {
             width: 100%;
             height: 100%;
-            overflow-y: auto;
+            overflow: hidden;
             position: relative;
             z-index: 1051;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0;
+        }
+
+        .ge-sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            min-height: 64px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            background: #0d0d0d;
+        }
+
+        .ge-sidebar-scroll {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 16px;
+        }
+
+        .ge-sidebar-scroll::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+            background: transparent;
+        }
+
+        .ge-sidebar-brand img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 10px rgba(240, 185, 11, 0.45));
+        }
+
+        .ge-sidebar-brand-text strong {
+            display: block;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            line-height: 1.2;
+        }
+
+        .ge-sidebar-brand-text span {
+            display: block;
+            color: var(--accent-color);
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            margin-top: 4px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .ge-sidebar-help {
+            margin: auto 14px 12px;
+            padding: 16px;
+            border-radius: 14px;
+            background: rgba(240, 185, 11, 0.06);
+            border: 1px solid rgba(240, 185, 11, 0.28);
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .ge-sidebar-help i {
+            font-size: 22px;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .ge-sidebar-help h5 {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin: 0 0 4px;
+        }
+
+        .ge-sidebar-help p {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin: 0 0 12px;
+        }
+
+        .ge-sidebar-help a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color) !important;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .ge-sidebar-help a:hover {
+            background: rgba(240, 185, 11, 0.15);
+            color: #fcd535 !important;
         }
 
         .sidebar.expanded {
@@ -222,20 +477,34 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         }
 
         /* Mobile Sidebar */
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
             .sidebar {
                 position: fixed !important;
-                left: -100% !important;
+                left: 0 !important;
                 top: 64px !important;
-                width: 280px !important;
+                width: min(300px, 86vw) !important;
                 height: calc(100vh - 64px) !important;
-                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-                transition: left 0.3s ease !important;
+                box-shadow: 2px 0 18px rgba(0, 0, 0, 0.45);
+                transition: transform 0.28s ease !important;
+                transform: translateX(-110%) !important;
                 z-index: 1050 !important;
             }
 
-            .sidebar.in {
-                left: 0 !important;
+            .sidebar.in,
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+
+            .navbar-brand {
+                display: flex !important;
+            }
+
+            .navbar-brand img {
+                height: 36px !important;
+            }
+
+            .ge-welcome-inline {
+                display: none !important;
             }
 
             .sidebar-backdrop {
@@ -245,8 +514,8 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                 left: 0;
                 width: 100%;
                 height: calc(100vh - 64px);
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1049;
+                background: rgba(0, 0, 0, 0.65);
+                z-index: 1040;
                 transition: opacity 0.3s ease;
             }
 
@@ -256,9 +525,15 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             }
         }
 
-        /* Menu Items */
-        #side-menu li {
+        /* Menu Items — never hide top-level entries */
+        #side-menu > li {
             position: relative;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
         }
 
         #side-menu li a {
@@ -274,57 +549,39 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             border-left: 3px solid transparent;
         }
 
-        /* Submenu styling for collapsed state */
-        .sidebar:not(.expanded) .nav-second-level {
-            position: fixed;
-            z-index: 1052 !important;
-            left: 80px;
-            min-width: 200px;
-            max-height: calc(100vh - 100px);
-            overflow-y: auto;
-            background: var(--card-bg);
-            border-radius: 4px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(10px);
-            transition: all 0.3s ease;
-            padding: 8px 0;
-            border: 1px solid var(--border-color);
-            pointer-events: none;
+        /* Submenu: force accordion (disable old flyout/max-height bugs) */
+        .sidebar:not(.expanded) .nav-second-level,
+        .sidebar.expanded .nav-second-level,
+        .sidebar .nav-second-level {
+            position: static !important;
+            left: auto !important;
+            min-width: 0 !important;
+            max-height: none !important;
+            overflow: visible !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+            pointer-events: auto !important;
+            display: none !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 2px 0 6px 10px !important;
         }
 
-        /* Show submenu on hover */
-        .sidebar:not(.expanded) #side-menu li:hover>.nav-second-level {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
-            pointer-events: auto;
-        }
-
-        /* Submenu items in collapsed state */
-        .sidebar:not(.expanded) .nav-second-level li a {
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #eaecef !important;
-        }
-
-        .sidebar:not(.expanded) .nav-second-level li a:hover {
-            background: var(--hover-bg);
-        }
-
-        /* Submenu styling for expanded state */
-        .sidebar.expanded .nav-second-level {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: rgba(0, 0, 0, 0.1);
-        }
-
+        .sidebar .nav-second-level.show,
         .sidebar.expanded .nav-second-level.show {
-            max-height: 500px;
+            display: block !important;
+            max-height: none !important;
+        }
+
+        .sidebar:not(.expanded) #side-menu li:hover > .nav-second-level {
+            display: none !important;
+        }
+
+        .sidebar .nav-second-level.show,
+        .sidebar:not(.expanded) #side-menu li:hover > .nav-second-level.show {
+            display: block !important;
         }
 
         /* Arrow indicator */
@@ -344,7 +601,7 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         }
         
         /* Desktop hover state for all menu items */
-        @media (min-width: 769px) {
+        @media (min-width: 992px) {
             #side-menu>li>a:hover {
                 background: var(--hover-bg);
                 border-left-color: var(--accent-color);
@@ -360,15 +617,15 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
 
         /* Animation for submenu items */
         .nav-second-level li {
-            opacity: 0;
-            transform: translateX(-10px);
+            opacity: 1;
+            transform: none;
             transition: all 0.3s ease;
         }
 
         .nav-second-level.show li,
         .sidebar:not(.expanded) #side-menu li:hover>.nav-second-level li {
             opacity: 1;
-            transform: translateX(0);
+            transform: none;
         }
 
         /* Delayed animation for submenu items */
@@ -414,12 +671,14 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             content: none !important;
         }
 
-        /* Menu text */
+        /* Menu text — always visible (mockup-style sidebar) */
         .menu-text {
-            display: none;
-            opacity: 0;
+            display: block;
+            opacity: 1;
             transition: opacity 0.3s ease;
             color: #eaecef !important;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .sidebar.expanded .menu-text {
@@ -456,7 +715,8 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             margin-left: auto;
             font-size: 12px;
             transition: transform 0.3s ease;
-            opacity: 0;
+            opacity: 1;
+            color: var(--text-secondary);
         }
 
         .sidebar.expanded .fa.arrow {
@@ -466,11 +726,12 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         /* Submenu */
         .nav-second-level {
             display: none;
-            padding-left: 15px;
-            background: rgba(0, 0, 0, 0.1);
+            padding-left: 8px;
+            background: rgba(0, 0, 0, 0.25);
         }
 
-        .sidebar.expanded .nav-second-level {
+        .sidebar.expanded .nav-second-level.show,
+        .sidebar .nav-second-level.show {
             display: block;
         }
 
@@ -482,7 +743,7 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
 
         /* Arrow icon adjustments */
         .fa.arrow {
-            opacity: 0;
+            opacity: 1;
             transition: all 0.3s ease;
         }
 
@@ -579,7 +840,22 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         .navbar-top-links {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 4px;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-top-links {
+                gap: 2px;
+                margin-left: 0;
+            }
+
+            .ge-nav-left {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex: 1;
+                min-width: 0;
+            }
         }
 
         .navbar-top-links .nav-icon {
@@ -636,19 +912,31 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: linear-gradient(145deg, #f0b90b, #e6a908);
+            background: linear-gradient(145deg, #d4af37, #b8860b);
             border-radius: 50px;
             color: #000;
             transition: all 0.3s ease;
-            border: 2px solid #f0b90b;
+            border: 2px solid #d4af37;
+        }
+
+        @media (max-width: 991px) {
+            .custom-logout-btn {
+                width: 34px;
+                height: 34px;
+                min-width: 34px;
+                padding: 0;
+                justify-content: center;
+                border-radius: 50%;
+                border-width: 1px;
+            }
         }
 
         .custom-logout-btn:hover {
             background: #000;
-            color: #f0b90b;
-            border-color: #f0b90b;
+            color: #d4af37;
+            border-color: #d4af37;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(240, 185, 11, 0.2);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
         }
 
         .logout-icon-wrapper {
@@ -698,7 +986,8 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         }
 
         #page-wrapper {
-            padding: 0px 11px 0px 2px !important;
+            /* Top clearance for fixed navbar — sides/bottom set in media queries below */
+            padding-top: 80px !important;
             min-height: 568px;
             width: 100%;
             box-sizing: border-box;
@@ -706,9 +995,21 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             z-index: 1;
         }
 
+        @media (min-width: 992px) {
+            #page-wrapper {
+                padding: 80px 24px 40px 24px !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            #page-wrapper {
+                padding: 80px 12px 100px 12px !important;
+            }
+        }
+
         #wrapper {
             position: relative;
-            margin-top: 69px;
+            margin-top: 0 !important;
             width: 100%;
             overflow-x: hidden;
         }
@@ -718,16 +1019,27 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             box-sizing: border-box;
             position: relative;
             z-index: 1;
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        .content-header {
+            display: none !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            border: 0 !important;
         }
 
         /* Container alignment fixes */
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
             body {
                 overflow-x: hidden;
             }
 
             #wrapper {
-                margin-top: 64px;
+                margin-top: 0 !important;
             }
 
             .container-fluid {
@@ -775,11 +1087,21 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
             padding: 15px 15px !important;
         }
 
-        /* Mobile Navbar Toggle Button */
+        .navbar-top-links > li > a,
+        .navbar-top-links .material-icons,
+        .navbar .material-icons {
+            color: #d4af37 !important;
+        }
+
+        .navbar-brand span {
+            color: #d4af37;
+            font-weight: 700;
+        }
+
         .navbar-toggle {
             display: none;
             background: transparent;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(212, 175, 55, 0.35);
             border-radius: 8px;
             padding: 8px 12px;
             margin-right: 15px;
@@ -790,17 +1112,17 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         }
 
         .navbar-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(212, 175, 55, 0.12);
+            border-color: rgba(212, 175, 55, 0.65);
         }
 
         .navbar-toggle:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.7);
+            border-color: #d4af37;
         }
 
         .navbar-toggle i {
-            color: white;
+            color: #d4af37;
             font-size: 24px;
         }
 
@@ -818,16 +1140,16 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
     </style>
     <style type="text/tailwindcss">
         @theme {
-         --primary: #4f46e5;
-        --primary-hover: #4338ca;
-        --secondary: #7c3aed;
-         --text-primary: #1a202c;
-        --text-secondary: #4a5568;
-        --border-color: #e2e8f0;
-        --success: #10b981;
-        --warning: #f59e0b;
+         --primary: #d4af37;
+        --primary-hover: #b8860b;
+        --secondary: #b8860b;
+         --text-primary: #f5f5f5;
+        --text-secondary: #a0a0a0;
+        --border-color: rgba(212, 175, 55, 0.22);
+        --success: #22c55e;
+        --warning: #d4af37;
         --danger: #ef4444;
-        --info: #3b82f6;
+        --info: #6366f1;
       }
     </style>
 </head>
@@ -837,48 +1159,49 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
 
     <div id="wrapper" class="wrapper animsition">
         <!-- Navigation -->
-        <nav class="navbar navbar-fixed-top">
-            <!-- <div class="navbar-header"> -->
+        <nav class="navbar navbar-fixed-top ge-topbar">
+            <div class="ge-nav-left">
             <button type="button" class="navbar-toggle collapsed" id="mobileMenuToggle" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <i class="material-icons">menu</i>
             </button>
 
             <a class="navbar-brand" href="dashboard.php">
-                <?php if (file_exists('images/nexabot-logo.png')) { ?>
-                    <img class="main-logo" src="images/nexabot-logo.png" id="bg" alt="<?php echo SITE_NAME; ?>">
-                <?php } else { ?>
-                    <span><?php echo SITE_NAME; ?></span>
-                <?php } ?>
+                <img class="main-logo" src="theme/assets/logo.png" id="bg" alt="<?php echo SITE_NAME; ?>">
+                <span class="ge-navbar-brand-text">
+                    <strong><?php echo SITE_NAME; ?></strong>
+                    <small>Trade · Grow · Earn · Empower</small>
+                </span>
             </a>
-            <!--<ul class="nav navbar-nav hidden-xs">-->
-            <!--    <li><a id="fullscreen" href="#"><i class="material-icons">fullscreen</i> </a></li>-->
-            <!--</ul>-->
+            </div>
             <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown ge-nav-welcome hidden-xs">
+                    <span class="ge-welcome-inline">
+                        Welcome Back, <strong><?php echo htmlspecialchars($user->name); ?></strong>
+                    </span>
+                </li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" href="email_inbox.php">
-                        <i class="material-icons">chat</i>
+                    <a class="dropdown-toggle" href="email_inbox.php" title="Messages">
+                        <i class="material-icons">notifications</i>
                         <span class="label label-danger"><?php echo get_unread_message_count($uid); ?></span>
                     </a>
-                </li><!-- /.Dropdown -->
-                <?php /*<li class="dropdown">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-    <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
-            <i class="material-icons">person_add</i>
-            </a>
-        <ul class="dropdown-menu dropdown-user">
-            <?php /*<li><a href="profile.php"><i class="ti-user"></i>&nbsp; Profile</a></li>*/ ?>
-                <?php /*<li><a href="report_login.php"><i class="ti-lock"></i>&nbsp; Login Details</a></li>*?>
-            <li><a href="logout.php"><i class="ti-layout-sidebar-left"></i>&nbsp; Logout</a></li>
-            </ul><!-- /.dropdown-user -->
-            </li><!-- /.Dropdown -->*/ ?>
+                </li>
+                <li class="dropdown ge-nav-user">
+                    <a class="dropdown-toggle ge-user-chip" href="profile.php">
+                        <span class="ge-user-avatar"><?php echo strtoupper(substr($user->name, 0, 1)); ?></span>
+                        <span class="ge-user-meta hidden-xs">
+                            <strong><?php echo htmlspecialchars($user->name); ?></strong>
+                            <small>ID: <?php echo htmlspecialchars($user->login_id); ?></small>
+                        </span>
+                    </a>
+                </li>
                 <li class="log_out">
-                    <a href="logout.php" class="custom-logout-btn">
+                    <a href="logout.php" class="custom-logout-btn" title="Logout">
                         <span class="logout-icon-wrapper">
                             <i class="fas fa-arrow-right"></i>
                         </span>
                     </a>
-                </li><!-- /.Log out -->
+                </li>
             </ul> <!-- /.navbar-top-links -->
             <!-- </div> -->
 
@@ -888,48 +1211,122 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
         <!-- Mobile Sidebar Backdrop -->
         <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
         
-        <div class="sidebar">
+        <div class="sidebar expanded" id="geSidebar">
             <div class="sidebar-inner">
+                <div class="ge-sidebar-brand">
+                    <img src="theme/assets/logo.png" alt="<?php echo SITE_NAME; ?>">
+                    <div class="ge-sidebar-brand-text">
+                        <strong><?php echo SITE_NAME; ?></strong>
+                        <span>Trade · Grow · Earn · Empower</span>
+                    </div>
+                </div>
+                <div class="ge-sidebar-scroll">
+                <?php
+                $ge_page = strtolower(basename($_SERVER['PHP_SELF']));
+                $ge_menu = array(
+                    'dashboard' => in_array($ge_page, array('dashboard.php'), true),
+                    'profile' => in_array($ge_page, array('profile.php', 'change_password.php'), true),
+                    'team' => in_array($ge_page, array('direct_referral.php', 'downline.php', 'tree_view.php'), true),
+                    'trade' => in_array($ge_page, array('trade.php', 'live.php', 'live_trading.php', 'invest.php', 'invest_now.php'), true),
+                    'reports' => in_array($ge_page, array(
+                        'report_invest.php', 'report_growth.php', 'report_level.php',
+                        'report_royalty.php', 'report_direct.php', 'report_binary.php',
+                        'report_reward.php', 'report_recharge.php'
+                    ), true),
+                    'fund' => in_array($ge_page, array(
+                        'deposit_block.php', 'withdrawal_block.php',
+                        'report_deposit_block.php', 'report_withdrawal_block.php'
+                    ), true),
+                    'transfer' => in_array($ge_page, array(
+                        'fund_transfer.php', 'fund_transfer3.php',
+                        'report_fund_transfer.php', 'game_fund_transfer.php'
+                    ), true),
+                    'support' => in_array($ge_page, array(
+                        'email_compose_mail.php', 'email_inbox.php',
+                        'email_sent_mail.php', 'email.php'
+                    ), true),
+                );
+                if (!function_exists('ge_menu_link_active')) {
+                    function ge_menu_link_active($href)
+                    {
+                        $page = strtolower(basename($_SERVER['PHP_SELF']));
+                        $parts = parse_url($href);
+                        $file = strtolower(basename(isset($parts['path']) ? $parts['path'] : $href));
+                        if ($file !== $page) {
+                            return false;
+                        }
+                        if (!empty($parts['query'])) {
+                            parse_str($parts['query'], $need);
+                            foreach ($need as $key => $val) {
+                                if (!isset($_GET[$key]) || (string) $_GET[$key] !== (string) $val) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                }
+                if (!function_exists('ge_menu_li_class')) {
+                    function ge_menu_li_class($is_active)
+                    {
+                        return $is_active ? ' class="active"' : '';
+                    }
+                }
+                if (!function_exists('ge_menu_a_class')) {
+                    function ge_menu_a_class($is_active, $extra = 'material-ripple')
+                    {
+                        return ' class="' . trim($extra . ($is_active ? ' active' : '')) . '"';
+                    }
+                }
+                if (!function_exists('ge_menu_sub_class')) {
+                    function ge_menu_sub_class($is_active)
+                    {
+                        return ' class="nav nav-second-level' . ($is_active ? ' show' : '') . '"';
+                    }
+                }
+                if (!function_exists('ge_menu_child')) {
+                    function ge_menu_child($href)
+                    {
+                        return ge_menu_link_active($href) ? ' class="active"' : '';
+                    }
+                }
+                ?>
                 <ul class="nav" id="side-menu">
 
-                    <li>
-                        <a href="dashboard.php" data-title="Dashboard" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['dashboard']); ?>>
+                        <a href="dashboard.php" data-title="Dashboard"<?php echo ge_menu_a_class($ge_menu['dashboard']); ?>>
                             <i class="fas fa-tachometer-alt"></i>
                             <span class="menu-text">Dashboard</span>
-                            <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="dashboard.php" class="material-ripple">Dashboard</a></li>
-                        </ul>
                     </li>
                     <!--<li><a href="dashboard2.php" class="material-ripple"><i class="fas fa-chart-line"></i> Validator Dashboard</a></li>-->
 
                     <!-- Profile Section -->
-                    <li>
-                        <a href="#" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['profile']); ?>>
+                        <a href="#"<?php echo ge_menu_a_class($ge_menu['profile']); ?><?php echo $ge_menu['profile'] ? ' aria-expanded="true"' : ''; ?> data-has-submenu="true">
                             <i class="fas fa-user-circle"></i>
                             <span class="menu-text">Profile</span>
                             <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="profile.php"><i class="fas fa-id-badge"></i> My Profile</a></li>
-                            <li><a href="change_password.php"><i class="fas fa-key"></i> Change Password</a></li>
+                        <ul<?php echo ge_menu_sub_class($ge_menu['profile']); ?>>
+                            <li<?php echo ge_menu_child('profile.php'); ?>><a href="profile.php" class="<?php echo ge_menu_link_active('profile.php') ? 'active' : ''; ?>"><i class="fas fa-id-badge"></i> My Profile</a></li>
+                            <li<?php echo ge_menu_child('change_password.php'); ?>><a href="change_password.php" class="<?php echo ge_menu_link_active('change_password.php') ? 'active' : ''; ?>"><i class="fas fa-key"></i> Change Password</a></li>
                         </ul>
                     </li>
 
-                    <li>
-                        <a href="#" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['team']); ?>>
+                        <a href="#"<?php echo ge_menu_a_class($ge_menu['team']); ?><?php echo $ge_menu['team'] ? ' aria-expanded="true"' : ''; ?>>
                             <i class="fas fa-user-friends"></i>
                             <span class="menu-text">Team</span>
                             <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="direct_referral.php" class="material-ripple"><lord-icon
+                        <ul<?php echo ge_menu_sub_class($ge_menu['team']); ?>>
+                            <li<?php echo ge_menu_child('direct_referral.php'); ?>><a href="direct_referral.php" class="material-ripple<?php echo ge_menu_link_active('direct_referral.php') ? ' active' : ''; ?>"><lord-icon
                                         src="https://cdn.lordicon.com/hpivxauj.json" trigger="hover"
                                         style="width:30px;height:30px">
                                     </lord-icon>
                                     My Direct</a></li>
-                            <li><a href="downline.php" class="material-ripple"><lord-icon
+                            <li<?php echo ge_menu_child('downline.php'); ?>><a href="downline.php" class="material-ripple<?php echo ge_menu_link_active('downline.php') ? ' active' : ''; ?>"><lord-icon
                                         src="https://cdn.lordicon.com/eszyyflr.json" trigger="hover"
                                         style="width:30px;height:30px">
                                     </lord-icon> My Team</a>
@@ -939,31 +1336,32 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                         </ul>
                     </li>
 
-                    <li>
-                        <a href="trade.php" data-title="Trade" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['trade']); ?>>
+                        <a href="#" data-title="Trade"<?php echo ge_menu_a_class($ge_menu['trade']); ?><?php echo $ge_menu['trade'] ? ' aria-expanded="true"' : ''; ?>>
                             <i class="fas fa-chart-bar icon"></i>
                             <span class="menu-text">Trade</span>
                             <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="trade.php" class="material-ripple">Trade</a></li>
+                        <ul<?php echo ge_menu_sub_class($ge_menu['trade']); ?>>
+                            <li<?php echo ge_menu_child('trade.php'); ?>><a href="trade.php" class="material-ripple<?php echo ge_menu_link_active('trade.php') ? ' active' : ''; ?>"><i class="fas fa-box-open" style="width:18px;margin-right:8px;opacity:0.85;"></i> Plans</a></li>
+                            <li<?php echo ge_menu_child('live.php'); ?>><a href="live.php" class="material-ripple<?php echo ge_menu_link_active('live.php') ? ' active' : ''; ?>"><i class="fas fa-chart-line" style="width:18px;margin-right:8px;opacity:0.85;"></i> Live Trading</a></li>
                         </ul>
                     </li>
 
                     <!--<li><a href="invest_new.php?type=3" class="material-ripple"><i class="fas fa-money-bill"></i> Stacking Coins</a></li>-->
 
-                    <li>
-                        <a href="#" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['reports']); ?>>
+                        <a href="#"<?php echo ge_menu_a_class($ge_menu['reports']); ?><?php echo $ge_menu['reports'] ? ' aria-expanded="true"' : ''; ?>>
                             <i class="fas fa-money-bill-wave"></i>
                             <span class="menu-text">Reports</span>
                             <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="report_invest.php" class="material-ripple"><lord-icon
+                        <ul<?php echo ge_menu_sub_class($ge_menu['reports']); ?>>
+                            <li<?php echo ge_menu_child('report_invest.php'); ?>><a href="report_invest.php" class="material-ripple<?php echo ge_menu_link_active('report_invest.php') ? ' active' : ''; ?>"><lord-icon
                                         src="https://cdn.lordicon.com/etqbfrgp.json" trigger="hover"
                                         style="width:30px;height:30px">
                                     </lord-icon> Investments History</a></li>
-                            <li><a href="report_growth.php" class="material-ripple"><lord-icon
+                            <li<?php echo ge_menu_child('report_growth.php'); ?>><a href="report_growth.php" class="material-ripple<?php echo ge_menu_link_active('report_growth.php') ? ' active' : ''; ?>"><lord-icon
                                         src="https://cdn.lordicon.com/xyboiuok.json" trigger="hover"
                                         style="width:30px;height:30px">
                                     </lord-icon>Daily Trading Income</a></li>
@@ -983,7 +1381,7 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                                         style="width:30px;height:30px">
                                     </lord-icon> Matching Income</a></li>*/?>
 
-                            <li><a href="report_level.php?type=2" class="material-ripple"><lord-icon
+                            <li<?php echo ge_menu_child('report_level.php?type=2'); ?>><a href="report_level.php?type=2" class="material-ripple<?php echo ge_menu_link_active('report_level.php?type=2') ? ' active' : ''; ?>"><lord-icon
                                         src="https://cdn.lordicon.com/eszyyflr.json" trigger="hover"
                                         style="width:30px;height:30px">
                                     </lord-icon>Level ROI Income</a></li>
@@ -1026,39 +1424,39 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                     <!--    </ul>-->
                     <!--</li>-->
 
-                    <li>
-                        <a href="#" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['fund']); ?>>
+                        <a href="#"<?php echo ge_menu_a_class($ge_menu['fund']); ?><?php echo $ge_menu['fund'] ? ' aria-expanded="true"' : ''; ?>>
                             <i class="fas fa-exchange-alt"></i>
                             <span class="menu-text">Fund Management</span>
                             <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
+                        <ul<?php echo ge_menu_sub_class($ge_menu['fund']); ?>>
                             <?php /*<li><a href="deposit_block.php" class="material-ripple"><i class="fas fa-cart-plus"></i> Add Fund by <?php echo SITE_CURRENCY_TKN; ?></a></li>*/ ?>
-                            <li><a href="deposit_block.php" class="material-ripple"><i class="fas fa-cart-plus"></i> Add
+                            <li<?php echo ge_menu_child('deposit_block.php'); ?>><a href="deposit_block.php" class="material-ripple<?php echo ge_menu_link_active('deposit_block.php') ? ' active' : ''; ?>"><i class="fas fa-cart-plus"></i> Add
                                     Fund by <?php echo SITE_CURRENCY_TKN; ?></a></li>
-                            <li><a href="report_deposit_block.php" class="material-ripple"><i
+                            <li<?php echo ge_menu_child('report_deposit_block.php'); ?>><a href="report_deposit_block.php" class="material-ripple<?php echo ge_menu_link_active('report_deposit_block.php') ? ' active' : ''; ?>"><i
                                         class="fas fa-history"></i> Deposit History</a></li>
-                            <li><a href="withdrawal_block.php?type=10" class="material-ripple"><i
+                            <li<?php echo ge_menu_child('withdrawal_block.php'); ?>><a href="withdrawal_block.php?type=10" class="material-ripple<?php echo ge_menu_link_active('withdrawal_block.php') ? ' active' : ''; ?>"><i
                                         class="material-icons">insert_emoticon</i> Withdrawal</a></li>
-                            <li><a href="report_withdrawal_block.php" class="material-ripple"><i
+                            <li<?php echo ge_menu_child('report_withdrawal_block.php'); ?>><a href="report_withdrawal_block.php" class="material-ripple<?php echo ge_menu_link_active('report_withdrawal_block.php') ? ' active' : ''; ?>"><i
                                         class="fas fa-history"></i> Withdrawal History</a></li>
                         </ul>
                     </li>
 
-                    <li>
-                        <a href="#" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['transfer']); ?>>
+                        <a href="#"<?php echo ge_menu_a_class($ge_menu['transfer']); ?><?php echo $ge_menu['transfer'] ? ' aria-expanded="true"' : ''; ?>>
                             <i class="fas fa-money-bill-alt"></i>
                             <span class="menu-text">Fund Transfer</span>
                             <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
+                        <ul<?php echo ge_menu_sub_class($ge_menu['transfer']); ?>>
                             <!--<li><a href="fund_transfer.php?type=1" class="material-ripple"><i class="fas fa-exchange-alt"></i> Topup Fund Transfer</a></li>-->
-                            <li><a href="fund_transfer3.php?type=1" class="material-ripple"><i
+                            <li<?php echo ge_menu_child('fund_transfer3.php'); ?>><a href="fund_transfer3.php?type=1" class="material-ripple<?php echo ge_menu_link_active('fund_transfer3.php') ? ' active' : ''; ?>"><i
                                         class="fas fa-exchange-alt"></i> Self Fund Transfer</a></li>
-                            <li><a href="fund_transfer.php" class="material-ripple"><i
+                            <li<?php echo ge_menu_child('fund_transfer.php'); ?>><a href="fund_transfer.php" class="material-ripple<?php echo ge_menu_link_active('fund_transfer.php') ? ' active' : ''; ?>"><i
                                         class="fas fa-exchange-alt"></i> P2P Fund Transfer</a></li>
                             <!-- <li><a href="game_fund_transfer.php" class="material-ripple"><i class="fas fa-exchange-alt"></i> Fund Transfer to Game</a></li> -->
-                            <li><a href="report_fund_transfer.php" class="material-ripple"><i
+                            <li<?php echo ge_menu_child('report_fund_transfer.php'); ?>><a href="report_fund_transfer.php" class="material-ripple<?php echo ge_menu_link_active('report_fund_transfer.php') ? ' active' : ''; ?>"><i
                                         class="fas fa-history"></i> Fund Transfer History</a></li>
                         </ul>
                     </li>
@@ -1069,16 +1467,16 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                     <!--    </a>-->
                     <!--</li>-->
 
-                    <li>
-                        <a href="#" class="material-ripple">
+                    <li<?php echo ge_menu_li_class($ge_menu['support']); ?>>
+                        <a href="#"<?php echo ge_menu_a_class($ge_menu['support']); ?><?php echo $ge_menu['support'] ? ' aria-expanded="true"' : ''; ?>>
                             <i class="fas fa-mail-bulk"></i>
                             <span class="menu-text">Support</span>
                             <span class="fa arrow"></span>
                         </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="email_compose_mail.php">Compose</a></li>
-                            <li><a href="email_inbox.php">Inbox</a></li>
-                            <li><a href="email_sent_mail.php">Sent</a></li>
+                        <ul<?php echo ge_menu_sub_class($ge_menu['support']); ?>>
+                            <li<?php echo ge_menu_child('email_compose_mail.php'); ?>><a href="email_compose_mail.php" class="<?php echo ge_menu_link_active('email_compose_mail.php') ? 'active' : ''; ?>">Compose</a></li>
+                            <li<?php echo ge_menu_child('email_inbox.php'); ?>><a href="email_inbox.php" class="<?php echo ge_menu_link_active('email_inbox.php') ? 'active' : ''; ?>">Inbox</a></li>
+                            <li<?php echo ge_menu_child('email_sent_mail.php'); ?>><a href="email_sent_mail.php" class="<?php echo ge_menu_link_active('email_sent_mail.php') ? 'active' : ''; ?>">Sent</a></li>
                         </ul>
                     </li>
                     <!-- <li>
@@ -1088,6 +1486,13 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                         </a>
                     </li> -->
                 </ul>
+                <div class="ge-sidebar-help">
+                    <i class="fas fa-headset"></i>
+                    <h5>Need Help?</h5>
+                    <p>Our support team is always here</p>
+                    <a href="email_compose_mail.php" class="btn-outline-gold"><i class="fas fa-envelope"></i> Contact Support</a>
+                </div>
+                </div><!-- /.ge-sidebar-scroll -->
             </div>
             <!-- /.sidebar-collapse -->
         </div>
@@ -1107,18 +1512,22 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
     </div>
     </div>*/ ?>
                 <!-- Content Header (Page header) -->
-                <div class="content-header">
+                <div class="content-header" style="display:none!important;height:0!important;margin:0!important;padding:0!important;">
                     <div class="header-icon"><i
                             class="pe-7s-<?php echo isset($titleicon) ? $titleicon : 'graph1'; ?>"></i></div>
                     <div class="header-title">
                         <h1><?php echo isset($title) ? $title : ''; ?></h1>
                     </div>
                 </div> <!-- /. Content Header (Page header) -->
-                <div class="row">
+                <?php
+                $ge_flash = getMessage();
+                if (!empty($ge_flash)) { ?>
+                <div class="row" style="margin:0 0 10px 0;">
                     <div class="col-sm-12 col-md-12">
-                        <?php echo getMessage(); ?>
+                        <?php echo $ge_flash; ?>
                     </div>
                 </div>
+                <?php } ?>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         // Prevent Bootstrap from controlling the sidebar
@@ -1167,7 +1576,7 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                         const navbarToggle = document.getElementById('mobileMenuToggle');
                         const sidebar = document.querySelector('.sidebar');
                         const backdrop = document.getElementById('sidebarBackdrop');
-                        const isMobile = () => window.innerWidth <= 768;
+                        const isMobile = () => window.innerWidth <= 991;
 
                         // Debug: Check if elements exist
                         console.log('Toggle button:', navbarToggle);
@@ -1191,33 +1600,20 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                                 console.log('Left position BEFORE:', styleBefore.left);
                                 
                                 // Force toggle
-                                const wasOpen = sidebar.classList.contains('in');
-                                sidebar.classList.toggle('in');
-                                backdrop.classList.toggle('show');
-                                
-                                console.log('After toggle - Has "in":', sidebar.classList.contains('in'));
-                                console.log('New classes:', sidebar.className);
-                                
-                                // Check computed style after
-                                setTimeout(() => {
-                                    const styleAfter = window.getComputedStyle(sidebar);
-                                    console.log('Left position AFTER:', styleAfter.left);
-                                    console.log('Display:', styleAfter.display);
-                                    console.log('Visibility:', styleAfter.visibility);
-                                    console.log('Opacity:', styleAfter.opacity);
-                                }, 50);
+                                const wasOpen = sidebar.classList.contains('in') || sidebar.classList.contains('open');
+                                sidebar.classList.toggle('in', !wasOpen);
+                                sidebar.classList.toggle('open', !wasOpen);
+                                backdrop.classList.toggle('show', !wasOpen);
                                 
                                 // Update aria-expanded
-                                const isExpanded = sidebar.classList.contains('in');
+                                const isExpanded = sidebar.classList.contains('in') || sidebar.classList.contains('open');
                                 this.setAttribute('aria-expanded', isExpanded);
                                 
                                 // Prevent body scroll when menu is open
                                 if (isExpanded) {
                                     document.body.style.overflow = 'hidden';
-                                    console.log('✅ Menu should be OPEN now');
                                 } else {
                                     document.body.style.overflow = '';
-                                    console.log('❌ Menu should be CLOSED now');
                                 }
                             });
                         } else {
@@ -1226,8 +1622,10 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
 
                         // Close menu function
                         function closeMenu() {
+                            if (!sidebar) return;
                             sidebar.classList.remove('in');
-                            backdrop.classList.remove('show');
+                            sidebar.classList.remove('open');
+                            if (backdrop) backdrop.classList.remove('show');
                             document.body.style.overflow = '';
                             if (navbarToggle) {
                                 navbarToggle.setAttribute('aria-expanded', 'false');
@@ -1280,35 +1678,43 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                         const themeSwitcher = document.getElementById('themeSwitcher');
                         const html = document.documentElement;
 
-                        themeSwitcher.addEventListener('click', function () {
-                            const currentTheme = html.getAttribute('data-theme');
-                            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                            html.setAttribute('data-theme', newTheme);
+                        if (themeSwitcher) {
+                            themeSwitcher.addEventListener('click', function () {
+                                const currentTheme = html.getAttribute('data-theme');
+                                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                                html.setAttribute('data-theme', newTheme);
 
-                            // Update icon
-                            const icon = this.querySelector('i');
-                            icon.textContent = newTheme === 'dark' ? 'dark_mode' : 'light_mode';
+                                // Update icon
+                                const icon = this.querySelector('i');
+                                if (icon) {
+                                    icon.textContent = newTheme === 'dark' ? 'dark_mode' : 'light_mode';
+                                }
 
-                            // Save preference
-                            localStorage.setItem('theme', newTheme);
-                        });
+                                // Save preference
+                                localStorage.setItem('theme', newTheme);
+                            });
+                        }
 
                         // Settings Panel Toggle
                         const settingsToggle = document.getElementById('settingsToggle');
                         const settingsPanel = document.getElementById('settingsPanel');
 
-                        settingsToggle.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            settingsPanel.classList.toggle('active');
-                        });
+                        if (settingsToggle && settingsPanel) {
+                            settingsToggle.addEventListener('click', function (e) {
+                                e.preventDefault();
+                                settingsPanel.classList.toggle('active');
+                            });
+                        }
 
                         // Sidebar Toggle
                         const sidebarToggle = document.getElementById('sidebarToggle');
                         const sidebar = document.querySelector('.sidebar');
 
-                        sidebarToggle.addEventListener('click', function () {
-                            sidebar.classList.toggle('active');
-                        });
+                        if (sidebarToggle && sidebar) {
+                            sidebarToggle.addEventListener('click', function () {
+                                sidebar.classList.toggle('active');
+                            });
+                        }
 
                         // Add slide-in animation to menu items
                         const menuItems = document.querySelectorAll('#side-menu li a');
@@ -1326,114 +1732,44 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                         }
                     });
                 </script>
-                <style>
-                    /* Base styles */
+                                <style>
+                    /* Accordion submenu - all devices (no hover flyout) */
                     .nav-second-level {
-                        list-style: none;
-                        padding: 0;
-                        margin: 0;
-                        background: var(--card-bg);
-                        border: 1px solid rgba(255, 255, 255, 0.1);
-                        border-radius: 4px;
-                        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+                        list-style: none !important;
+                        padding: 2px 0 6px 10px !important;
+                        margin: 0 !important;
+                        background: transparent !important;
+                        border: none !important;
+                        border-radius: 0 !important;
+                        box-shadow: none !important;
+                        position: static !important;
+                        left: auto !important;
+                        display: none !important;
+                        max-height: none !important;
+                        overflow: visible !important;
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        transform: none !important;
+                        pointer-events: auto !important;
                     }
-
-                    /* Ensure all menu and submenu text is light */
-                    #side-menu li a,
-                    #side-menu li a .menu-text,
-                    .nav-second-level li a,
-                    .nav-second-level li a i {
-                        color: #eaecef !important;
+                    .nav-second-level.show { display: block !important; }
+                    .nav-second-level li { opacity: 1 !important; transform: none !important; }
+                    .nav-second-level li a { color: #9ca3af !important; padding: 10px 14px !important; pointer-events: auto !important; }
+                    .nav-second-level li a:hover { color: #fff !important; }
+                    .nav-second-level li.active > a,
+                    .nav-second-level a.active {
+                        color: #f5c842 !important;
+                        background: rgba(212, 175, 55, 0.12) !important;
+                        border-radius: 8px !important;
                     }
-
-                    /* Desktop styles (hover) */
-                    @media (min-width: 769px) {
-                        .nav-second-level {
-                            position: fixed;
-                            left: 80px;
-                            min-width: 200px;
-                            max-height: calc(100vh - 100px);
-                            overflow-y: auto;
-                            display: none;
-                            z-index: 1052 !important;
-                        }
-
-                        #side-menu li:hover>.nav-second-level {
-                            display: block;
-                            animation: fadeInUp 0.3s ease forwards;
-                            z-index: 1052 !important;
-                        }
-                        
-                        /* Menu item hover z-index boost */
-                        #side-menu li:hover {
-                            z-index: 1053 !important;
-                        }
+                    #side-menu > li.active > a,
+                    #side-menu > li > a.active {
+                        color: #f5c842 !important;
                     }
+                    #side-menu > li > a[data-has-submenu] .fa.arrow { opacity: 1 !important; display: inline-block !important; margin-left: auto; }
+                    #side-menu > li > a[aria-expanded="true"] .fa.arrow { transform: rotate(180deg) !important; }
 
-                    /* Mobile styles */
-                    @media (max-width: 768px) {
-                        .nav-second-level {
-                            position: static !important;
-        display: none !important;
-                            background: rgba(0, 0, 0, 0.15);
-                            border: none !important;
-                            box-shadow: none !important;
-                            border-radius: 0;
-                            max-height: 0;
-                            overflow: hidden;
-                            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                            opacity: 1 !important;
-                            visibility: visible !important;
-                            transform: none !important;
-                            pointer-events: auto !important;
-                            left: auto !important;
-                        }
-
-                        .nav-second-level.show {
-        display: block !important;
-                            max-height: 800px;
-                            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                        }
-
-                        #side-menu > li > a {
-                            padding: 15px 20px;
-                            display: flex;
-                            /* justify-content: space-between; */
-                            align-items: center;
-                        }
-
-                        .nav-second-level li a {
-                            padding: 12px 20px 12px 50px !important;
-                            font-size: 14px;
-                            color: #eaecef !important;
-                        }
-
-                        /* Show arrow on mobile for items with submenu */
-                        #side-menu > li > a[data-has-submenu] .fa.arrow {
-                            opacity: 1 !important;
-                            display: inline-block !important;
-                            position: absolute;
-                            right: 20px;
-                        }
-
-                        /* Rotate arrow when submenu is open */
-                        #side-menu > li > a[aria-expanded="true"] .fa.arrow {
-                            transform: rotate(180deg) !important;
-                        }
-                        
-                        /* Ensure menu text is visible on mobile */
-                        .sidebar .menu-text {
-                            display: block !important;
-                            opacity: 1 !important;
-                        }
-                        
-                        /* Submenu items styling on mobile */
-                        .sidebar .nav-second-level li {
-                            transition-delay: 0s !important;
-                        }
-                    }
-
-                    /* Animation keyframes */
+/* Animation keyframes */
                     @keyframes fadeInUp {
                         from {
                             opacity: 0;
@@ -1467,7 +1803,7 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                 </style>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        const isMobile = () => window.innerWidth <= 768;
+                        const isMobile = () => window.innerWidth <= 991;
                         const sidebar = document.querySelector('.sidebar');
 
                         // Handle submenu toggle on mobile
@@ -1475,39 +1811,56 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                         menuItemsWithSubmenu.forEach(item => {
                             const submenu = item.nextElementSibling;
                             const hasSubmenu = submenu && submenu.classList.contains('nav-second-level');
+                            const parentLi = item.closest('li');
                             
                             if (hasSubmenu) {
                                 // Mark as having submenu
                                 item.setAttribute('data-has-submenu', 'true');
-                                item.setAttribute('aria-expanded', 'false');
+                                const keepOpen = item.classList.contains('active')
+                                    || (parentLi && parentLi.classList.contains('active'))
+                                    || submenu.classList.contains('show');
+                                if (keepOpen) {
+                                    submenu.classList.add('show');
+                                    item.setAttribute('aria-expanded', 'true');
+                                } else if (!item.hasAttribute('aria-expanded')) {
+                                    item.setAttribute('aria-expanded', 'false');
+                                }
                                 
                                 item.addEventListener('click', function(e) {
-                                    if (isMobile()) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        
-                                        const isOpen = submenu.classList.contains('show');
-                                        
-                                        // Close all other submenus
-                                        document.querySelectorAll('.nav-second-level').forEach(menu => {
-                                            if (menu !== submenu) {
-                                                menu.classList.remove('show');
-                                                const parentLink = menu.previousElementSibling;
-                                                if (parentLink) {
-                                                    parentLink.setAttribute('aria-expanded', 'false');
-                                                }
-                                            }
-                                        });
-                                        
-                                        // Toggle current submenu
-                                        submenu.classList.toggle('show');
-                                        
-                                        // Update aria-expanded
-                                        this.setAttribute('aria-expanded', !isOpen);
-                                        
-                                        // Prevent sidebar from auto-closing when opening dropdown
+                                    // Accordion submenu: only block navigation for # / empty href parents
+                                    var href = (this.getAttribute('href') || '').trim();
+                                    var isToggleOnly = (!href || href === '#' || href.indexOf('javascript:') === 0);
+                                    if (!(isMobile() || (sidebar && sidebar.classList.contains('expanded')))) {
                                         return;
                                     }
+                                    if (!isToggleOnly) {
+                                        // Real link with submenu — allow navigation
+                                        return;
+                                    }
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    
+                                    const isOpen = submenu.classList.contains('show');
+                                    
+                                    // Close all other submenus
+                                    document.querySelectorAll('.nav-second-level').forEach(menu => {
+                                        if (menu !== submenu) {
+                                            menu.classList.remove('show');
+                                            const parentLink = menu.previousElementSibling;
+                                            if (parentLink) {
+                                                parentLink.setAttribute('aria-expanded', 'false');
+                                            }
+                                        }
+                                    });
+                                    
+                                    // Toggle current submenu
+                                    submenu.classList.toggle('show');
+                                    
+                                    // Update aria-expanded
+                                    this.setAttribute('aria-expanded', !isOpen);
+                                    
+                                    // Prevent sidebar from auto-closing when opening dropdown
+                                    return;
                                 });
                             } else {
                                 // For items without submenu, allow normal navigation
@@ -1530,12 +1883,21 @@ $typearr = array(6 => 'DOT', 7 => 'TRX', 8 => 'LINK', 9 => 'BNB', 10 => 'BTC', 1
                                     text.style.display = '';
                                     text.style.opacity = '';
                                 });
-                                
-                                // Close all mobile submenus
-                                document.querySelectorAll('.nav-second-level').forEach(menu => {
-                                    menu.classList.remove('show');
-                                });
                             }
+
+                            // Keep current page section open on every viewport
+                            document.querySelectorAll('#side-menu > li').forEach(li => {
+                                const menu = li.querySelector('.nav-second-level');
+                                const link = li.children[0];
+                                if (!menu || !link) return;
+                                if (li.classList.contains('active') || link.classList.contains('active')) {
+                                    menu.classList.add('show');
+                                    link.setAttribute('aria-expanded', 'true');
+                                } else if (!isMobile()) {
+                                    menu.classList.remove('show');
+                                    link.setAttribute('aria-expanded', 'false');
+                                }
+                            });
                         }
 
                         // Initial setup

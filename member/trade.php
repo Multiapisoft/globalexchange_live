@@ -2,892 +2,840 @@
 $title = 'Investment Plans';
 $_is_dashboard = 1;
 include_once 'header.php';
-
+user();
 
 $check = my_query("SHOW COLUMNS FROM `investments_plan` LIKE 'action'");
-
 if (mysqli_num_rows($check) == 0) {
     $query = "ALTER TABLE `investments_plan` ADD `action` TINYINT NOT NULL DEFAULT '1' COMMENT '1. active\r\n,0. Deactive' AFTER `status`;";
     my_query($query);
 }
 
-// Check and add exchange_pair column
 $check_pair = my_query("SHOW COLUMNS FROM `investments` LIKE 'exchange_pair'");
 if (mysqli_num_rows($check_pair) == 0) {
     $query_pair = "ALTER TABLE `investments` ADD `exchange_pair` VARCHAR(50) NULL DEFAULT NULL COMMENT 'Trading pair like BTC/USDT' AFTER `invest_hour`;";
     my_query($query_pair);
 }
 
-// Check and add exchange_coin column
 $check_coin = my_query("SHOW COLUMNS FROM `investments` LIKE 'exchange_coin'");
 if (mysqli_num_rows($check_coin) == 0) {
     $query_coin = "ALTER TABLE `investments` ADD `exchange_coin` VARCHAR(50) NULL DEFAULT NULL COMMENT 'Selected cryptocurrency' AFTER `exchange_pair`;";
     my_query($query_coin);
 }
 
-// Bot Activation Account (ipid = 1) required before Silver/Gold
 $botActivationCheck = my_query("SELECT recid FROM investments WHERE uid = '" . (int) $_SESSION['userid'] . "' AND ipid = 1 LIMIT 1");
 $hasBotActivation = mysqli_num_rows($botActivationCheck) > 0;
 
-// Legacy check (ipid = 4 Bot Subscription) — kept for reference
 $botSubscriptionCheck = my_query("SELECT * FROM investments WHERE uid = '" . (int) $_SESSION['userid'] . "' AND ipid = 4 AND is_closed = 0 ORDER BY datetime DESC LIMIT 1");
 $hasBotSubscription = mysqli_num_rows($botSubscriptionCheck) > 0;
 
 $query = "SELECT * FROM investments_plan WHERE status = 0 AND action = 1 ORDER BY recid ASC";
-$result = my_query($query);
-$i = 0;
-$j = 0;
-
-// Calculate total investment plans
-$total_plans = mysqli_num_rows($result);
-
-// Calculate total investment value (example calculation)
-$total_value = 0;
-$temp_result = my_query($query);
-while ($temp_row = mysqli_fetch_object($temp_result)) {
-    $total_value += $temp_row->amount_from;
-}
-
-// Calculate active investors (example)
-$active_investors = 1250 + rand(0, 100);
-
-// Fetch all plans for dynamic display
-$all_plans = [];
+$all_plans = array();
 $plans_result = my_query($query);
 while ($plan = mysqli_fetch_object($plans_result)) {
-    // Control visibility by subscription state
-    // if (
-    //     (!$hasBotSubscription && $plan->recid == 3) || // hide bot trading until subscribed
-    //     ($hasBotSubscription && in_array($plan->recid, [2, 4])) // hide self-trading & subscription once subscribed
-    // ) {
-    //     continue;
-    // }
     $all_plans[] = $plan;
 }
 
-// Define color mapping for all plans - this ensures card and form colors match
-$available_colors = ['green', 'blue', 'purple', 'orange', 'red', 'pink', 'indigo', 'teal', 'yellow', 'cyan'];
-$plan_color_map = [];
-
-// Create color mapping based on plan recid
-foreach ($all_plans as $index => $plan) {
-    // If plan recid is 1-4, use predefined colors, otherwise cycle through available colors
-    if ($plan->recid >= 1 && $plan->recid <= 4) {
-        $predefined_colors = [1 => 'green', 2 => 'blue', 3 => 'purple', 4 => 'orange'];
-        $plan_color_map[$plan->recid] = $predefined_colors[$plan->recid];
-    } else {
-        // For plans beyond 4, cycle through available colors
-        $plan_color_map[$plan->recid] = $available_colors[($plan->recid - 1) % count($available_colors)];
-    }
+$wallet_topup = 0;
+if (isset($_SESSION['userdata']) && isset($_SESSION['userdata']->wallet_topup)) {
+    $wallet_topup = (float) $_SESSION['userdata']->wallet_topup;
+} elseif (isset($user->wallet_topup)) {
+    $wallet_topup = (float) $user->wallet_topup;
 }
 
+function ge_plan_tier($plan) {
+    $title = strtolower((string) $plan->title);
+    $recid = (int) $plan->recid;
+    if ($recid === 1 || strpos($title, 'bot') !== false || strpos($title, 'activation') !== false) {
+        return 'bot';
+    }
+    if ($recid === 2 || strpos($title, 'silver') !== false) {
+        return 'silver';
+    }
+    if ($recid === 3 || strpos($title, 'gold') !== false) {
+        return 'gold';
+    }
+    return 'gold';
+}
 ?>
-
-<!-- Include Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* Ensure trade page content stays below sidebar */
-    .trade-page.container-fluid {
-        position: relative;
-        z-index: 1 !important;
-    }
+.content-header { display: none !important; }
 
-    @media (max-width: 768px) {
-        .trade-page.container-fluid {
-            padding-left: 15px !important;
-            padding-right: 15px !important;
-            max-width: 100vw;
-            overflow-x: hidden;
-        }
+.ge-trade {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.5rem 0 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.ge-trade *,
+.ge-trade *::before,
+.ge-trade *::after { box-sizing: border-box; }
 
-        body, #page-wrapper {
-            overflow-x: hidden;
-            width: 100%;
-        }
-    }
+.ge-trade-head h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  color: #fff;
+}
+.ge-trade-head p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
 
-    /* Dark theme overrides for trade page */
-    .trade-page.bg-gray-100 {
-        background-color: #0b0e11 !important;
-    }
+.ge-panel {
+  border-radius: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: #141414;
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+@media (min-width: 640px) {
+  .ge-panel { padding: 1.5rem 1.75rem; }
+}
 
-    .trade-page .package-card {
-        background-color: #1e2329 !important;
-        border-color: #2c3137 !important;
-        color: #eaecef !important;
-    }
+.ge-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+}
+.ge-status i { margin-top: 0.15rem; flex-shrink: 0; }
+.ge-status.warn {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.08);
+  color: #f5e6a8;
+}
+.ge-status.warn i { color: #d4af37; }
+.ge-status.ok {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.08);
+  color: #a7f3d0;
+}
+.ge-status.ok i { color: #34d399; }
 
-    .trade-page .package-card .text-gray-800,
-    .trade-page .package-card .text-gray-600,
-    .trade-page .text-gray-800,
-    .trade-page .text-gray-600 {
-        color: #eaecef !important;
-    }
+.ge-plan-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .ge-plan-grid { grid-template-columns: 1fr 1fr; }
+  .ge-plan-grid .ge-plan-card.tier-bot { grid-column: 1 / -1; }
+}
 
-    .trade-page .package-card .bg-white {
-        background-color: #1e2329 !important;
-    }
+.ge-plan-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: #141414;
+  padding: 1.35rem 1.4rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+.ge-plan-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ffe566, #d4af37, #b8860b);
+}
+.ge-plan-card.tier-silver::before {
+  background: linear-gradient(90deg, #e8e8e8, #c0c0c0, #9a9a9a);
+}
+.ge-plan-card:hover:not(.locked) {
+  border-color: rgba(212, 175, 55, 0.5);
+  transform: translateY(-2px);
+}
+.ge-plan-card.active {
+  border-color: rgba(212, 175, 55, 0.65);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25), 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.ge-plan-card.locked {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+.ge-plan-card.locked .ge-plan-body { filter: grayscale(0.25); }
 
-    .trade-page .package-card:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
-    }
+.ge-plan-lock {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1rem;
+  text-align: center;
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(2px);
+}
+.ge-plan-lock i { font-size: 1.5rem; color: #d4af37; }
+.ge-plan-lock.ok i { color: #34d399; }
+.ge-plan-lock strong { color: #fff; font-size: 0.95rem; }
+.ge-plan-lock span { color: #9ca3af; font-size: 0.78rem; max-width: 220px; }
 
-    /* Custom styles for investment plans page */
-    .investment-plans-page {
-        color: #eaecef;
-        background-color: #0b0e11;
-    }
+.ge-plan-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+.ge-plan-top h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.ge-plan-card.tier-bot .ge-plan-top h2,
+.ge-plan-card.tier-gold .ge-plan-top h2 {
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ge-plan-card.tier-silver .ge-plan-top h2 { color: #c0c0c0; }
 
-    .investment-plans-page h1,
-    .investment-plans-page h2,
-    .investment-plans-page h3 {
-        color: #ffffff;
-    }
+.ge-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ge-badge.req {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+.ge-badge.gold {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: #d4af37;
+}
+.ge-badge.silver {
+  background: rgba(192, 192, 192, 0.12);
+  border: 1px solid rgba(192, 192, 192, 0.35);
+  color: #c0c0c0;
+}
 
-    .investment-plans-page a {
-        color: #4f83cc;
-    }
+.ge-plan-desc {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+.ge-plan-price {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.ge-plan-card.tier-bot .ge-plan-price,
+.ge-plan-card.tier-gold .ge-plan-price {
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ge-plan-card.tier-silver .ge-plan-price { color: #c0c0c0; }
+.ge-plan-price-sub {
+  margin: 0.25rem 0 1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
 
-    .investment-plans-page a:hover {
-        color: #3b5998;
-    }
+.ge-plan-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.ge-plan-features li {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+  color: #b7bdc6;
+}
+.ge-plan-features li i {
+  color: #d4af37;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+.ge-plan-card.tier-silver .ge-plan-features li i { color: #c0c0c0; }
 
-    /* Specific styles for the dynamic tab section */
-    .dynamic-tab-section {
-        color: #eaecef;
-        background-color: #1e2329;
-        border-radius: 12px;
-        padding: 24px;
-        margin-top: 32px;
-    }
+.ge-plan-cta {
+  margin-top: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: transparent;
+  color: #d4af37;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: inherit;
+  pointer-events: none;
+}
+.ge-plan-card.active .ge-plan-cta,
+.ge-plan-card.tier-gold .ge-plan-cta {
+  border: none;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  color: #0a0a0a;
+}
+.ge-plan-card.tier-silver:not(.active) .ge-plan-cta {
+  border-color: rgba(192, 192, 192, 0.4);
+  color: #c0c0c0;
+}
 
-    .dynamic-tab-section h3 {
-        color: #ffffff;
-        font-size: 1.875rem; /* 30px */
-        margin-bottom: 16px;
-    }
+.ge-form-wrap { display: none; }
+.ge-form-wrap.show { display: block; }
 
-    .dynamic-tab-section label {
-        color: #b0bec5;
-        font-weight: 500;
-    }
+.ge-form-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ge-form-head h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ge-form-head p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+.ge-bal {
+  text-align: right;
+}
+.ge-bal span {
+  display: block;
+  font-size: 0.72rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ge-bal strong {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #d4af37;
+}
 
-    .dynamic-tab-section input,
-    .dynamic-tab-section select {
-        color: #ffffff;
-        background-color: #2c3137;
-        border: 1px solid #37474f;
-        border-radius: 8px;
-        padding: 12px;
-        font-size: 1rem; /* 16px */
-    }
+.ge-field { margin-bottom: 1rem; }
+.ge-field label {
+  display: block;
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+.ge-field input,
+.ge-field select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: #0a0a0a;
+  color: #fff;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+}
+.ge-field input:focus,
+.ge-field select:focus {
+  border-color: rgba(212, 175, 55, 0.65);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+.ge-field input[readonly] {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+.ge-field .hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+.ge-amount-wrap { position: relative; }
+.ge-amount-wrap .pfx {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #d4af37;
+  font-weight: 700;
+}
+.ge-amount-wrap input { padding-left: 1.75rem; }
 
-    .dynamic-tab-section input::placeholder {
-        color: #78909c;
-    }
+.ge-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 1rem;
+}
+@media (min-width: 700px) {
+  .ge-form-grid { grid-template-columns: 1fr 1fr; }
+  .ge-form-grid .span-2 { grid-column: 1 / -1; }
+}
 
-    .dynamic-tab-section button {
-        background-color: #4caf50;
-        color: #ffffff;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem; /* 16px */
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
+.ge-quick {
+  margin-top: 0.65rem;
+}
+.ge-quick p {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  color: #9ca3af;
+}
+.ge-quick-btns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+.ge-quick-btns button {
+  padding: 0.45rem 0.35rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: #0a0a0a;
+  color: #d4af37;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+.ge-quick-btns button:hover {
+  border-color: rgba(212, 175, 55, 0.55);
+  background: rgba(212, 175, 55, 0.1);
+}
 
-    .dynamic-tab-section button:hover {
-        background-color: #45a049;
-    }
+.ge-price-box {
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: rgba(212, 175, 55, 0.05);
+  padding: 1rem;
+}
+.ge-price-box h4 {
+  margin: 0 0 0.85rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #d4af37;
+}
+.ge-price-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+@media (min-width: 600px) {
+  .ge-price-cols { grid-template-columns: 1fr 1fr; }
+}
+.ge-price-col {
+  background: #0a0a0a;
+  border-radius: 10px;
+  padding: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ge-price-col .nm { font-size: 0.75rem; color: #9ca3af; margin-bottom: 0.25rem; }
+.ge-price-col .px { font-size: 1.25rem; font-weight: 800; color: #fff; }
+.ge-price-diff {
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+.ge-price-diff .lbl { font-size: 0.75rem; color: #9ca3af; }
+.ge-price-diff .val { font-size: 1.05rem; font-weight: 800; color: #d4af37; margin-top: 0.2rem; }
+.ge-price-diff .arb { font-size: 0.75rem; color: #b7bdc6; margin-top: 0.35rem; }
+.ge-price-note {
+  margin: 0.65rem 0 0;
+  text-align: center;
+  font-size: 0.72rem;
+  color: #6b7280;
+}
 
-    /* Responsive styles for mobile devices */
-    @media (max-width: 768px) {
-        .dynamic-tab-section {
-            padding: 16px;
-        }
+.ge-benefits {
+  margin: 0.5rem 0 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0a0a0a;
+}
+.ge-benefits h4 {
+  margin: 0 0 0.65rem;
+  font-size: 0.9rem;
+  color: #fff;
+}
+.ge-benefits ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.ge-benefits li {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #b7bdc6;
+}
+.ge-benefits li i { color: #d4af37; margin-top: 0.15rem; }
 
-        .dynamic-tab-section h3 {
-            font-size: 1.5rem; /* 24px */
-        }
-
-        .dynamic-tab-section input,
-        .dynamic-tab-section select {
-            font-size: 0.875rem; /* 14px */
-        }
-
-        .dynamic-tab-section button {
-            font-size: 0.875rem; /* 14px */
-        }
-    }
-    .trade-page .package-card.plan-locked {
-        opacity: 0.55;
-        filter: grayscale(0.35);
-        cursor: not-allowed !important;
-        pointer-events: none;
-    }
-
-    .trade-page .package-card .plan-lock-overlay {
-        position: absolute;
-        inset: 0;
-        z-index: 20;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: rgba(11, 14, 17, 0.72);
-        color: #fff;
-        text-align: center;
-        padding: 16px;
-        pointer-events: none;
-    }
-
-    .trade-page .package-card .plan-lock-overlay i {
-        font-size: 2rem;
-        margin-bottom: 8px;
-        color: #f0b90b;
-    }
-
-    .trade-page .package-card .plan-lock-overlay strong {
-        display: block;
-        font-size: 1rem;
-        margin-bottom: 4px;
-    }
-
-    .trade-page .package-card .plan-lock-overlay span {
-        font-size: 0.8rem;
-        color: #b7bdc6;
-    }
+.ge-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.9rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  color: #0a0a0a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.28);
+}
+.ge-btn-gold:hover { filter: brightness(1.06); }
 </style>
 
-<div class="container-fluid bg-gray-900 min-h-screen py-8 flex flex-col items-center trade-page investment-plans-page">
+<div class="ge-trade">
+  <div class="ge-trade-head">
+    <h1>Investment Packages</h1>
+    <p>Bot Activation · Silver · Gold</p>
+  </div>
 
-    <!-- Page Header -->
-    <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Investment Plans</h1>
-        <p class="text-lg text-gray-600">Choose the perfect plan for your trading strategy</p>
-        <?php if (!$hasBotActivation): ?>
-        <p class="mt-3 text-sm text-yellow-400">
-            <i class="fas fa-lock mr-1"></i>
-            Silver &amp; Gold packages unlock after you buy <strong>Bot Activation Account</strong>.
-        </p>
-        <?php else: ?>
-        <p class="mt-3 text-sm text-green-400">
-            <i class="fas fa-check-circle mr-1"></i>
-            Bot Activation completed. Trading packages are unlocked.
-        </p>
-        <?php endif; ?>
-    </div>
+  <?php if (!$hasBotActivation) { ?>
+  <div class="ge-panel ge-status warn">
+    <i class="fas fa-lock"></i>
+    <div>Silver &amp; Gold packages unlock after you buy <strong>Bot Activation Account</strong>.</div>
+  </div>
+  <?php } else { ?>
+  <div class="ge-panel ge-status ok">
+    <i class="fas fa-check-circle"></i>
+    <div>Bot Activation completed. Trading packages are unlocked.</div>
+  </div>
+  <?php } ?>
 
-    <!-- Cards Section -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-full w-full px-4 mb-8">
-
-        <?php 
-        // exit;
-        foreach ($all_plans as $plan) {
-            // Get color from unified color map - ensures card and form colors match
-            $color = $plan_color_map[$plan->recid] ?? 'indigo';
-            
-            // Check if user has investment for this plan (for Self-Trading and Bot-Trading)
-            $userInvestment = my_query("SELECT * FROM investments WHERE uid = '" . (int) $_SESSION['userid'] . "' AND ipid = '" . (int) $plan->recid . "' ORDER BY datetime DESC LIMIT 1");
-            $userdata = mysqli_fetch_object($userInvestment);
-            
-            $buttonType = 'invest'; // default
-            $remainingSeconds = 0;
-            $isDisabled = false;
-            $lockReason = '';
-            // Bot Activation: one-time only — disable after purchase
-            // Silver/Gold: locked until Bot Activation is purchased
-            $isPlanLocked = false;
-            if ((int) $plan->recid === 1 && $hasBotActivation) {
-                $isPlanLocked = true;
-                $lockReason = 'activated';
-            } elseif (!$hasBotActivation && in_array((int) $plan->recid, [2, 3], true)) {
-                $isPlanLocked = true;
-                $lockReason = 'need_bot';
-            }
-            if ($isPlanLocked) {
-                $isDisabled = true;
-            }
-            
-            // COMMENTED: Timer functionality
-            // if ($userdata && in_array($plan->recid, [2])) { // Only for Self-Trading (ipid=2) and Bot-Trading (ipid=3)
-            //     $investTime = strtotime($userdata->datetime);
-            //     $cycleHours = (int) $userdata->invest_hour;
-            //     $elapsed = time() - $investTime;
-            //     
-            //     if ($userdata->is_closed == 1) {
-            //         // Investment is closed - card is enabled (can invest again)
-            //         $buttonType = 'invest';
-            //         $isDisabled = false;
-            //     } elseif ($elapsed < ($cycleHours * 3600)) {
-            //         // Timer still running - card is disabled
-            //         $buttonType = 'running';
-            //         $remainingSeconds = ($cycleHours * 3600) - $elapsed;
-            //         $isDisabled = true;
-            //     } else {
-            //         // COMMENTED: Closed functionality
-            //         // Time completed but not closed yet - show close button but keep card disabled for new investment
-            //         // $buttonType = 'closed';
-            //         // $isDisabled = true;
-            //         $buttonType = 'running';
-            //         $isDisabled = true;
-            //     }
-            // }
-        ?>
-        
-        <!-- Dynamic Package Card -->
-        <div onclick="<?php echo ($isDisabled && $buttonType != 'closed') ? '' : ($buttonType == 'closed' ? '' : "selectPackage(this, 'tab{$plan->recid}', 'plan-{$plan->recid}')"); ?>"
-            class="package-card <?php echo $isPlanLocked ? 'plan-locked' : ''; ?> <?php echo ($buttonType != 'closed' && !$isDisabled) ? 'cursor-pointer' : 'cursor-default'; ?> bg-white shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden border-2 <?php echo $buttonType == 'closed' ? 'border-red-300 bg-red-50' : 'border-gray-200'; ?> <?php echo !$isDisabled ? 'hover:border-'.$color.'-500 transform hover:-translate-y-1' : ''; ?> <?php echo ($isDisabled && $buttonType != 'closed') ? 'opacity-60' : ''; ?> relative"
-            <?php echo ($isDisabled && $buttonType != 'closed') ? 'style="pointer-events: none;"' : ''; ?>>
-            
-            <?php if ($isPlanLocked): ?>
-            <div class="plan-lock-overlay">
-                <?php if ($lockReason === 'activated'): ?>
-                <i class="fas fa-check-circle" style="color:#0ecb81;"></i>
-                <strong>Already Activated</strong>
-                <span>Bot Activation purchased — one time only</span>
-                <?php else: ?>
-                <i class="fas fa-lock"></i>
-                <strong>Locked</strong>
-                <span>Buy Bot Activation Account first</span>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
-
-            <!-- Random Badge Display -->
-            <?php if (!$isPlanLocked && rand(0, 5) == 1): ?>
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-lg">
-                    <i class="fas fa-fire"></i> HOT
-                </div>
-            <?php elseif (!$isPlanLocked && rand(0, 7) == 1): ?>
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-lg">
-                    <i class="fas fa-certificate"></i> NEW
-                </div>
-            <?php elseif (!$isPlanLocked && rand(0, 4) == 1): ?>
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full z-10 shadow-lg">
-                    <i class="fas fa-star"></i> POPULAR
-                </div>
-            <?php endif; ?>
-            
-            <div class="bg-gradient-to-r from-<?php echo $color; ?>-500 to-<?php echo $color; ?>-600 p-4 text-center">
-                <h2 class="text-xl font-bold text-white mb-1"><?php echo $plan->title; ?></h2>
-                <p class="text-<?php echo $color; ?>-100 text-sm"><?php echo substr($plan->line1, 0, 30); ?></p>
-            </div>
-            
-            <div class="p-5">
-                <?php 
-                // COMMENTED: Timer functionality - entire timer section commented out
-                // if ($buttonType == 'running'): ?>
-                    <!-- COMMENTED: Timer Display -->
-                    <!-- <div class="text-center mb-3 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                        <div class="text-lg font-bold text-yellow-700 mb-1">
-                            <i class="fas fa-clock"></i> Time Left
-                        </div>
-                        <div class="text-2xl font-bold text-yellow-800" id="card-countdown-<?php echo $plan->recid; ?>"></div>
-                        <div class="text-xs text-yellow-600 mt-1">Trading in Progress...</div>
-                    </div>
-                    
-                    <script>
-                        let cardRemaining<?php echo $plan->recid; ?> = <?php echo $remainingSeconds; ?>;
-                        const cardCountdownEl<?php echo $plan->recid; ?> = document.getElementById("card-countdown-<?php echo $plan->recid; ?>");
-                        const cardDiv<?php echo $plan->recid; ?> = cardCountdownEl<?php echo $plan->recid; ?>.closest('.package-card');
-                        
-                        function updateCardCountdown<?php echo $plan->recid; ?>() {
-                            // COMMENTED: Closed functionality
-                            // if (cardRemaining<?php echo $plan->recid; ?> <= 0) {
-                            //     // Timer completed - show closed button
-                            //     cardCountdownEl<?php echo $plan->recid; ?>.closest('.bg-yellow-50').outerHTML = `
-                            //         <div class="text-center mb-3">
-                            //             <form action="close_investment.php" method="POST" class="inline-block">
-                            //                 <input type="hidden" name="investment_id" value="<?php echo $userdata->recid ?? ''; ?>">
-                            //                 <button type="submit" name="submit-button" 
-                            //                     class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg">
-                            //                     <i class="fas fa-times-circle mr-2"></i> Close Investment
-                            //                 </button>
-                            //             </form>
-                            //             <p class="text-xs text-red-600 mt-2">Time completed - Click to close</p>
-                            //         </div>
-                            //     `;
-                            //     return;
-                            // }
-                            if (cardRemaining<?php echo $plan->recid; ?> <= 0) {
-                                return;
-                            }
-                            let hours = Math.floor(cardRemaining<?php echo $plan->recid; ?> / 3600);
-                            let minutes = Math.floor((cardRemaining<?php echo $plan->recid; ?> % 3600) / 60);
-                            let seconds = cardRemaining<?php echo $plan->recid; ?> % 60;
-                            cardCountdownEl<?php echo $plan->recid; ?>.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                            cardRemaining<?php echo $plan->recid; ?>--;
-                        }
-                        
-                        updateCardCountdown<?php echo $plan->recid; ?>();
-                        setInterval(updateCardCountdown<?php echo $plan->recid; ?>, 1000);
-                    </script> -->
-                <?php 
-                // COMMENTED: Closed functionality
-                // elseif ($buttonType == 'closed' && $userdata->is_closed == 0): ?>
-                    <!-- COMMENTED: Closed Button - Time Expired -->
-                    <!-- <div class="text-center mb-3">
-                        <form action="close_investment.php" method="POST" class="inline-block w-full">
-                            <input type="hidden" name="investment_id" value="<?php echo $userdata->recid; ?>">
-                            <button type="submit" name="submit-button" 
-                                class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl">
-                                <i class="fas fa-times-circle mr-2"></i> Close Investment
-                            </button>
-                        </form>
-                        <p class="text-xs text-red-600 mt-2">Time completed - Click to close</p>
-                    </div> -->
-                <?php // else: ?>
-                <!-- COMMENTED: Always show investment amount (timer functionality disabled) -->
-                <div class="text-center mb-3">
-                    <div class="text-3xl font-bold text-gray-800">
-                        <?php 
-                        if ($plan->amount_from == $plan->amount_to) {
-                            echo '$' . number_format($plan->amount_from);
-                        } else {
-                            echo '$' . number_format($plan->amount_from) . ' - $' . number_format($plan->amount_to);
-                        }
-                        ?>
-                    </div>
-                    <div class="text-gray-500 text-sm">Investment Amount</div>
-                </div>
-                <?php // endif; ?>
-                
-                <div class="space-y-2 mb-3">
-                    <?php if ($plan->line1): ?>
-                    <div class="flex items-center text-<?php echo $color; ?>-600 text-base">
-                        <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span><?php echo substr($plan->line1, 0, 25); ?></span>
-                    </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($plan->line2): ?>
-                    <div class="flex items-center text-<?php echo $color; ?>-600 text-base">
-                        <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span><?php echo substr($plan->line2, 0, 25); ?></span>
-                    </div>
-                    <?php endif; ?>
-                    
-                    <!-- Common Features for All Plans -->
-                    <div class="flex items-center text-<?php echo $color; ?>-600 text-base">
-                        <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>24/7 Customer Support</span>
-                    </div>
-                    
-                    <div class="flex items-center text-<?php echo $color; ?>-600 text-base">
-                        <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>Secure & Regulated Platform</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <?php } ?>
-
-        </div>
-
-    <!-- Tab Content Section - Dynamic Forms -->
-    
-    <?php foreach ($all_plans as $plan) { 
-        // Get color from unified color map - ensures card and form colors match
-        $form_color = $plan_color_map[$plan->recid] ?? 'indigo';
-        // Hide forms that should not be investable
-        // - Bot Activation form after already purchased
-        // - Silver/Gold forms until Bot Activation is purchased
-        if ((int) $plan->recid === 1 && $hasBotActivation) {
-            continue;
-        }
-        if (!$hasBotActivation && in_array((int) $plan->recid, [2, 3], true)) {
-            continue;
-        }
+  <div class="ge-plan-grid">
+    <?php foreach ($all_plans as $plan) {
+      $tier = ge_plan_tier($plan);
+      $isPlanLocked = false;
+      $lockReason = '';
+      if ((int) $plan->recid === 1 && $hasBotActivation) {
+          $isPlanLocked = true;
+          $lockReason = 'activated';
+      } elseif (!$hasBotActivation && in_array((int) $plan->recid, array(2, 3), true)) {
+          $isPlanLocked = true;
+          $lockReason = 'need_bot';
+      }
+      $amount_label = ($plan->amount_from == $plan->amount_to)
+          ? '$' . number_format((float) $plan->amount_from)
+          : '$' . number_format((float) $plan->amount_from) . ' – $' . number_format((float) $plan->amount_to);
+      $onclick = $isPlanLocked ? '' : "selectPackage(this, 'tab{$plan->recid}', 'plan-{$plan->recid}')";
     ?>
-    
-    <!-- Dynamic Tab Form for Plan ID: <?php echo $plan->recid; ?> -->
-    <div class="max-w-4xl w-full mt-10 bg-white shadow-xl rounded-2xl p-8 hidden dynamic-tab-section" id="tab<?php echo $plan->recid; ?>">
-        <div class="border-b border-gray-200 pb-4 mb-6">
-            <div class="flex justify-between items-start mb-3">
-                <div>
-                    <h3 class="text-3xl font-bold text-<?php echo $form_color; ?>-600 mb-2"><?php echo $plan->title; ?></h3>
-                    <!-- <p class="text-gray-600"><?php echo $plan->line1 . ' - ' . $plan->line2; ?></p> -->
-                </div>
-                <div class="text-right">
-                    <p class="text-sm text-gray-500 mb-1">Available Balance</p>
-                    <p class="text-2xl font-bold text-<?php echo $form_color; ?>-600">
-                        $<?php echo number_format($_SESSION['userdata']->wallet_topup, 2); ?>
-                    </p>
-                </div>
+    <div class="ge-plan-card tier-<?php echo htmlspecialchars($tier); ?><?php echo $isPlanLocked ? ' locked' : ''; ?>"
+         <?php if ($onclick) { ?>onclick="<?php echo $onclick; ?>"<?php } ?>
+         data-tab="tab<?php echo (int) $plan->recid; ?>">
+      <?php if ($isPlanLocked) { ?>
+      <div class="ge-plan-lock<?php echo $lockReason === 'activated' ? ' ok' : ''; ?>">
+        <?php if ($lockReason === 'activated') { ?>
+          <i class="fas fa-check-circle"></i>
+          <strong>Already Activated</strong>
+          <span>Bot Activation purchased — one time only</span>
+        <?php } else { ?>
+          <i class="fas fa-lock"></i>
+          <strong>Locked</strong>
+          <span>Buy Bot Activation Account first</span>
+        <?php } ?>
+      </div>
+      <?php } ?>
+
+      <div class="ge-plan-body">
+        <div class="ge-plan-top">
+          <h2><?php echo htmlspecialchars($plan->title); ?></h2>
+          <div>
+            <?php if ($tier === 'bot') { ?>
+              <span class="ge-badge req">Required</span>
+            <?php } elseif ($tier === 'gold') { ?>
+              <span class="ge-badge gold">Popular</span>
+            <?php } else { ?>
+              <span class="ge-badge silver">Trading</span>
+            <?php } ?>
+          </div>
+        </div>
+        <?php if (!empty($plan->line1)) { ?>
+          <p class="ge-plan-desc"><?php echo htmlspecialchars($plan->line1); ?></p>
+        <?php } ?>
+        <p class="ge-plan-price"><?php echo $amount_label; ?></p>
+        <p class="ge-plan-price-sub">Investment amount</p>
+        <ul class="ge-plan-features">
+          <?php if (!empty($plan->line1)) { ?>
+          <li><i class="fas fa-check"></i><span><?php echo htmlspecialchars($plan->line1); ?></span></li>
+          <?php } ?>
+          <?php if (!empty($plan->line2)) { ?>
+          <li><i class="fas fa-check"></i><span><?php echo htmlspecialchars($plan->line2); ?></span></li>
+          <?php } ?>
+          <li><i class="fas fa-check"></i><span>24/7 Customer Support</span></li>
+          <li><i class="fas fa-check"></i><span>Secure &amp; Regulated Platform</span></li>
+        </ul>
+        <?php if (!$isPlanLocked) { ?>
+        <div class="ge-plan-cta"><i class="fas fa-arrow-right"></i> Select Package</div>
+        <?php } ?>
+      </div>
+    </div>
+    <?php } ?>
+  </div>
+
+  <?php foreach ($all_plans as $plan) {
+    if ((int) $plan->recid === 1 && $hasBotActivation) {
+        continue;
+    }
+    if (!$hasBotActivation && in_array((int) $plan->recid, array(2, 3), true)) {
+        continue;
+    }
+    $is_fixed_amount = ($plan->amount_from == $plan->amount_to);
+    $fixed_amount_value = $is_fixed_amount ? number_format((float) $plan->amount_from, 2, '.', '') : '';
+    $pid = (int) $plan->recid;
+  ?>
+  <div class="ge-panel ge-form-wrap" id="tab<?php echo $pid; ?>">
+    <div class="ge-form-head">
+      <div>
+        <h3><?php echo htmlspecialchars($plan->title); ?></h3>
+        <p>Complete the form below to invest</p>
+      </div>
+      <div class="ge-bal">
+        <span>Available Balance</span>
+        <strong>$<?php echo number_format($wallet_topup, 2); ?></strong>
+      </div>
+    </div>
+
+    <form action="invest_now_model.php" method="POST">
+      <input type="hidden" name="recid" value="<?php echo $pid; ?>">
+      <input type="hidden" name="type" value="0">
+
+      <div class="ge-form-grid">
+        <div class="ge-field">
+          <label for="amount_input_<?php echo $pid; ?>">Investment Amount</label>
+          <div class="ge-amount-wrap">
+            <span class="pfx">$</span>
+            <input type="number" name="amount" id="amount_input_<?php echo $pid; ?>"
+              placeholder="Enter amount" required
+              min="<?php echo htmlspecialchars($plan->amount_from); ?>"
+              max="<?php echo htmlspecialchars($plan->amount_to); ?>"
+              <?php if ($is_fixed_amount || $pid == 4) { ?>
+                value="<?php echo $fixed_amount_value ? $fixed_amount_value : number_format((float) $plan->amount_from, 2, '.', ''); ?>"
+                readonly
+              <?php } ?>>
+          </div>
+          <p class="hint">
+            <?php if ($is_fixed_amount || $pid == 4) { ?>
+              Fixed amount: $<?php echo number_format((float) $plan->amount_from, 2); ?>
+            <?php } else { ?>
+              Min: $<?php echo number_format((float) $plan->amount_from); ?> — Max: $<?php echo number_format((float) $plan->amount_to); ?>
+            <?php } ?>
+          </p>
+
+          <?php if (in_array($pid, array(2, 3), true)) { ?>
+          <div class="ge-quick">
+            <p><i class="fas fa-bolt"></i> Quick Select</p>
+            <div class="ge-quick-btns">
+              <button type="button" onclick="setPercentageAmount<?php echo $pid; ?>(25)">25%</button>
+              <button type="button" onclick="setPercentageAmount<?php echo $pid; ?>(50)">50%</button>
+              <button type="button" onclick="setPercentageAmount<?php echo $pid; ?>(75)">75%</button>
+              <button type="button" onclick="setPercentageAmount<?php echo $pid; ?>(100)">100%</button>
             </div>
+          </div>
+          <script>
+          function setPercentageAmount<?php echo $pid; ?>(percentage) {
+            const minAmount = <?php echo json_encode((float) $plan->amount_from); ?>;
+            const maxAmount = <?php echo json_encode((float) $plan->amount_to); ?>;
+            // Quick select by package min–max range (whole numbers only)
+            let calculatedAmount = Math.round(minAmount + ((maxAmount - minAmount) * percentage) / 100);
+            if (calculatedAmount < minAmount) calculatedAmount = Math.ceil(minAmount);
+            if (calculatedAmount > maxAmount) calculatedAmount = Math.floor(maxAmount);
+            document.getElementById('amount_input_<?php echo $pid; ?>').value = String(calculatedAmount);
+          }
+          </script>
+          <?php } ?>
         </div>
 
-        <form action="invest_now_model.php" method="POST" class="space-y-6">
-            <input type="hidden" name="recid" value="<?php echo $plan->recid; ?>">
-            <input type="hidden" name="type" value="0">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Invest Amount -->
-                <div>
-                    <label class="block text-lg font-semibold text-gray-700 mb-2">Investment Amount</label>
-                    <div class="relative">
-                        <span class="absolute left-1 top-4 text-white-500 font-bold">$</span>
-                        <?php 
-                        // Check if min amount equals max amount (fixed amount plan)
-                        $is_fixed_amount = ($plan->amount_from == $plan->amount_to);
-                        $fixed_amount_value = $is_fixed_amount ? number_format($plan->amount_from, 2, '.', '') : '';
-                        ?>
-                        <input type="number" name="amount" id="amount_input_<?php echo $plan->recid; ?>"
-                            class="w-full pl-8 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-<?php echo $form_color; ?>-500 focus:outline-none <?php echo ($is_fixed_amount || $plan->recid == 4) ? 'bg-gray-100 cursor-not-allowed' : ''; ?>" 
-                            placeholder="Enter amount" required 
-                            min="<?php echo $plan->amount_from; ?>" 
-                            max="<?php echo $plan->amount_to; ?>"
-                            <?php if ($is_fixed_amount || $plan->recid == 4): ?>
-                                value="<?php echo $fixed_amount_value ? $fixed_amount_value : number_format($plan->amount_from, 2, '.', ''); ?>" 
-                                readonly
-                            <?php endif; ?>>
-                    </div>
-                    <p class="text-sm text-gray-800 mt-3">
-                        <?php if ($is_fixed_amount || $plan->recid == 4): ?>
-                            Fixed amount: $<?php echo number_format($plan->amount_from, 2); ?>
-                        <?php else: ?>
-                            Min: $<?php echo number_format($plan->amount_from); ?> - Max: $<?php echo number_format($plan->amount_to); ?>
-                        <?php endif; ?>
-                    </p>
-                    
-                    <!-- Quick Amount Selection Buttons -->
-                    <?php if (in_array($plan->recid, [2, 3])): // Trading packages only ?>
-                    <div class="mt-3">
-                        <p class="text-xs text-gray-600 mb-2"><i class="fas fa-bolt"></i> Quick Select:</p>
-                        <div class="grid grid-cols-4 gap-2">
-                            <button type="button" 
-                                onclick="setPercentageAmount<?php echo $plan->recid; ?>(25)"
-                                class="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 text-sm">
-                                25%
-                            </button>
-                            <button type="button" 
-                                onclick="setPercentageAmount<?php echo $plan->recid; ?>(50)"
-                                class="bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 text-sm">
-                                50%
-                            </button>
-                            <button type="button" 
-                                onclick="setPercentageAmount<?php echo $plan->recid; ?>(75)"
-                                class="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 text-sm">
-                                75%
-                            </button>
-                            <button type="button" 
-                                onclick="setPercentageAmount<?php echo $plan->recid; ?>(100)"
-                                class="bg-gradient-to-r from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 text-sm">
-                                100%
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <script>
-                    function setPercentageAmount<?php echo $plan->recid; ?>(percentage) {
-                        const walletBalance = <?php echo $_SESSION['userdata']->wallet_topup; ?>;
-                        const minAmount = <?php echo $plan->amount_from; ?>;
-                        const maxAmount = <?php echo $plan->amount_to; ?>;
-                        
-                        // Calculate percentage amount
-                        let calculatedAmount = (walletBalance * percentage) / 100;
-                        
-                        // Round to 2 decimal places
-                        calculatedAmount = Math.round(calculatedAmount * 100) / 100;
-                        
-                        // Validate against min/max limits
-                        if (calculatedAmount < minAmount) {
-                            alert('Calculated amount ($' + calculatedAmount.toFixed(2) + ') is less than minimum investment ($' + minAmount + '). Please add more funds to your wallet.');
-                            calculatedAmount = minAmount;
-                        } else if (calculatedAmount > maxAmount) {
-                            calculatedAmount = maxAmount;
-                            alert('Amount adjusted to maximum limit: $' + maxAmount);
-                        }
-                        
-                        // Set the input value
-                        document.getElementById('amount_input_<?php echo $plan->recid; ?>').value = calculatedAmount.toFixed(2);
-                        
-                        // Add visual feedback
-                        const inputField = document.getElementById('amount_input_<?php echo $plan->recid; ?>');
-                        inputField.classList.add('border-<?php echo $form_color; ?>-500', 'bg-<?php echo $form_color; ?>-50');
-                        setTimeout(() => {
-                            inputField.classList.remove('bg-<?php echo $form_color; ?>-50');
-                        }, 500);
-                    }
-                    </script>
-                    <?php endif; ?>
-    </div>
+        <?php if (in_array($pid, array(2, 3), true)) { ?>
+        <div class="ge-field">
+          <label for="exchange_pair_<?php echo $pid; ?>">Exchange Pair</label>
+          <select name="exchange_pair" id="exchange_pair_<?php echo $pid; ?>"
+            onchange="fetchPrices<?php echo $pid; ?>()" required>
+            <option value="">Select Exchange Pair</option>
+            <option value="binance-bybit">Binance vs Bybit</option>
+            <option value="binance-kucoin">Binance vs KuCoin</option>
+            <option value="binance-okx">Binance vs OKX</option>
+            <option value="bybit-kucoin">Bybit vs KuCoin</option>
+            <option value="bybit-okx">Bybit vs OKX</option>
+          </select>
+        </div>
 
-                <?php if ($plan->recid == 2): // Self-Trading ?>
-                <!-- Duration Time for Self-Trading -->
-                <!-- <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Duration Time</label>
-                    <select name="time" 
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-<?php echo $form_color; ?>-500 focus:outline-none" required>
-                        <option value="">Select Duration</option>
-                        <option value="1">1 Hour</option>
-                        <option value="3">3 Hours</option>
-                        <option value="5">5 Hours</option>
-                    </select>
-                </div> -->
+        <div class="ge-field">
+          <label for="exchange_coin_<?php echo $pid; ?>">Cryptocurrency</label>
+          <select name="exchange_coin" id="exchange_coin_<?php echo $pid; ?>"
+            onchange="fetchPrices<?php echo $pid; ?>()" required>
+            <option value="">Select Coin</option>
+            <option value="bitcoin">Bitcoin (BTC)</option>
+            <option value="ethereum">Ethereum (ETH)</option>
+            <option value="binancecoin">Binance Coin (BNB)</option>
+            <option value="ripple">Ripple (XRP)</option>
+            <option value="cardano">Cardano (ADA)</option>
+            <option value="solana">Solana (SOL)</option>
+          </select>
+        </div>
 
-                <?php elseif ($plan->recid == 3): // Bot Trading ?>
-                <!-- Fixed Duration for Bot Trading -->
-                <!-- <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Duration</label>
-                    <div class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg bg-gray-50">
-                        <span class="text-gray-700 font-semibold">24 Hours (Fixed)</span>
-                    </div>
-                    <input type="hidden" name="time" value="24">
-                </div> -->
-
-                <?php endif; ?>
-
-                <?php if (in_array($plan->recid, [2, 3])): // Trading packages only (not Bot Activation) ?>
-                <!-- Exchange Pair (Exchange Platforms) -->
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Exchange Pair (Select Exchanges)</label>
-                    <select name="exchange_pair" id="exchange_pair_<?php echo $plan->recid; ?>"
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-<?php echo $form_color; ?>-500 focus:outline-none" 
-                        onchange="fetchPrices<?php echo $plan->recid; ?>()" required>
-                        <option value="">Select Exchange Pair</option>
-                        <option value="binance-bybit">Binance vs Bybit</option>
-                        <option value="binance-kucoin">Binance vs KuCoin</option>
-                        <option value="binance-okx">Binance vs OKX</option>
-                        <option value="bybit-kucoin">Bybit vs KuCoin</option>
-                        <option value="bybit-okx">Bybit vs OKX</option>
-                    </select>
-                </div>
-
-                <!-- Exchange Coin -->
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Select Cryptocurrency</label>
-                    <select name="exchange_coin" id="exchange_coin_<?php echo $plan->recid; ?>"
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-<?php echo $form_color; ?>-500 focus:outline-none" 
-                        onchange="fetchPrices<?php echo $plan->recid; ?>()" required>
-                        <option value="">Select Coin</option>
-                        <option value="bitcoin">Bitcoin (BTC)</option>
-                        <option value="ethereum">Ethereum (ETH)</option>
-                        <option value="binancecoin">Binance Coin (BNB)</option>
-                        <option value="ripple">Ripple (XRP)</option>
-                        <option value="cardano">Cardano (ADA)</option>
-                        <option value="solana">Solana (SOL)</option>
-                    </select>
-                </div>
-
-                <!-- Price Comparison Display -->
-                <div class="col-span-2" id="price_display_<?php echo $plan->recid; ?>" style="display: none;">
-                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-<?php echo $form_color; ?>-300 rounded-lg p-6">
-                        <h4 class="text-lg font-bold text-<?php echo $form_color; ?>-800 mb-4 text-center">
-                            <i class="fas fa-chart-line mr-2"></i>Live Price Comparison
-                        </h4>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <!-- Exchange 1 Price -->
-                            <div class="bg-white rounded-lg p-4 shadow-md">
-                                <div class="text-sm text-gray-600 mb-1">
-                                    <i class="fas fa-exchange-alt mr-1"></i><span id="exchange1_name_<?php echo $plan->recid; ?>">Exchange 1</span>
-                                </div>
-                                <div class="text-2xl font-bold text-green-600" id="exchange1_price_<?php echo $plan->recid; ?>">
-                                    <i class="fas fa-spinner fa-spin"></i> Loading...
-                                </div>
-                            </div>
-
-                            <!-- Exchange 2 Price -->
-                            <div class="bg-white rounded-lg p-4 shadow-md">
-                                <div class="text-sm text-gray-600 mb-1">
-                                    <i class="fas fa-exchange-alt mr-1"></i><span id="exchange2_name_<?php echo $plan->recid; ?>">Exchange 2</span>
-                                </div>
-                                <div class="text-2xl font-bold text-blue-600" id="exchange2_price_<?php echo $plan->recid; ?>">
-                                    <i class="fas fa-spinner fa-spin"></i> Loading...
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Price Difference -->
-                        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg p-4 text-center">
-                            <div class="text-sm text-gray-700 mb-1">Price Difference</div>
-                            <div class="text-xl font-bold text-orange-700" id="price_difference_<?php echo $plan->recid; ?>">
-                                Calculating...
-                            </div>
-                            <div class="text-xs text-gray-600 mt-2" id="arbitrage_opportunity_<?php echo $plan->recid; ?>"></div>
-                        </div>
-
-                        <div class="text-xs text-gray-500 text-center mt-3">
-                            <i class="fas fa-sync-alt mr-1"></i> Prices update every 30 seconds
-                        </div>
-                    </div>
-                </div>
-
-                <script>
-                // API configuration for Plan <?php echo $plan->recid; ?>
-
-                let priceInterval<?php echo $plan->recid; ?> = null;
-                
-                function fetchPrices<?php echo $plan->recid; ?>() {
-                    const exchangePair = document.getElementById('exchange_pair_<?php echo $plan->recid; ?>').value;
-                    const coin = document.getElementById('exchange_coin_<?php echo $plan->recid; ?>').value;
-                    const priceDisplay = document.getElementById('price_display_<?php echo $plan->recid; ?>');
-                    
-                    // Clear previous interval
-                    if (priceInterval<?php echo $plan->recid; ?>) {
-                        clearInterval(priceInterval<?php echo $plan->recid; ?>);
-                    }
-                    
-                    if (!exchangePair || !coin) {
-                        priceDisplay.style.display = 'none';
-                        return;
-                    }
-                    
-                    priceDisplay.style.display = 'block';
-                    
-                    // Parse exchange pair
-                    const exchanges = exchangePair.split('-');
-                    const exchange1 = exchanges[0].charAt(0).toUpperCase() + exchanges[0].slice(1);
-                    const exchange2 = exchanges[1].charAt(0).toUpperCase() + exchanges[1].slice(1);
-                    
-                    document.getElementById('exchange1_name_<?php echo $plan->recid; ?>').textContent = exchange1;
-                    document.getElementById('exchange2_name_<?php echo $plan->recid; ?>').textContent = exchange2;
-                    
-                    // Fetch prices immediately
-                    updatePrices<?php echo $plan->recid; ?>(coin, exchange1, exchange2);
-                    
-                    // Update prices every 30 seconds
-                    priceInterval<?php echo $plan->recid; ?> = setInterval(() => {
-                        updatePrices<?php echo $plan->recid; ?>(coin, exchange1, exchange2);
-                    }, 30000);
-                }
-                
-                async function updatePrices<?php echo $plan->recid; ?>(coin, exchange1, exchange2) {
-                    try {
-                        // Fetch price from CoinGecko API
-                        const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd&include_24hr_change=true`);
-                        const data = await response.json();
-                        
-                        if (data[coin] && data[coin].usd) {
-                            const basePrice = data[coin].usd;
-                            
-                            // Simulate slight price difference between exchanges (0.1% - 0.5%)
-                            const variation1 = (Math.random() * 0.4 + 0.1) / 100; // 0.1% to 0.5%
-                            const variation2 = (Math.random() * 0.4 + 0.1) / 100;
-                            
-                            const price1 = basePrice * (1 + variation1);
-                            const price2 = basePrice * (1 - variation2);
-                            
-                            // Display prices
-                            document.getElementById('exchange1_price_<?php echo $plan->recid; ?>').innerHTML = 
-                                `$${price1.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-                            document.getElementById('exchange2_price_<?php echo $plan->recid; ?>').innerHTML = 
-                                `$${price2.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-                            
-                            // Calculate difference
-                            const difference = Math.abs(price1 - price2);
-                            const percentageDiff = ((difference / Math.min(price1, price2)) * 100).toFixed(2);
-                            
-                            const higherExchange = price1 > price2 ? exchange1 : exchange2;
-                            const lowerExchange = price1 > price2 ? exchange2 : exchange1;
-                            
-                            document.getElementById('price_difference_<?php echo $plan->recid; ?>').innerHTML = 
-                                `$${difference.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span class="text-sm">(${percentageDiff}%)</span>`;
-                            
-                            document.getElementById('arbitrage_opportunity_<?php echo $plan->recid; ?>').innerHTML = 
-                                `<i class="fas fa-info-circle mr-1"></i> Buy on ${lowerExchange}, Sell on ${higherExchange}`;
-                            
-                        }
-                    } catch (error) {
-                        console.error('Error fetching prices:', error);
-                        document.getElementById('exchange1_price_<?php echo $plan->recid; ?>').innerHTML = 
-                            '<span class="text-red-500 text-sm"><i class="fas fa-exclamation-circle"></i> Error</span>';
-                        document.getElementById('exchange2_price_<?php echo $plan->recid; ?>').innerHTML = 
-                            '<span class="text-red-500 text-sm"><i class="fas fa-exclamation-circle"></i> Error</span>';
-                    }
-                }
-                </script>
-                <?php endif; ?>
+        <div class="ge-field span-2" id="price_display_<?php echo $pid; ?>" style="display:none;">
+          <div class="ge-price-box">
+            <h4><i class="fas fa-chart-line"></i> Live Price Comparison</h4>
+            <div class="ge-price-cols">
+              <div class="ge-price-col">
+                <div class="nm"><i class="fas fa-exchange-alt"></i> <span id="exchange1_name_<?php echo $pid; ?>">Exchange 1</span></div>
+                <div class="px" id="exchange1_price_<?php echo $pid; ?>"><i class="fas fa-spinner fa-spin"></i></div>
+              </div>
+              <div class="ge-price-col">
+                <div class="nm"><i class="fas fa-exchange-alt"></i> <span id="exchange2_name_<?php echo $pid; ?>">Exchange 2</span></div>
+                <div class="px" id="exchange2_price_<?php echo $pid; ?>"><i class="fas fa-spinner fa-spin"></i></div>
+              </div>
             </div>
-
-            <?php if (in_array($plan->recid, [1, 4])): // Fixed Return and Bot Subscription Benefits ?>
-            <!-- Plan Benefits -->
-            <div class="bg-gray-800 border-2 border-gray-700 rounded-lg p-6">
-                <h4 class="text-lg font-bold text-white mb-4">Plan Benefits:</h4>
-                <ul class="space-y-3">
-                    <li class="flex items-center text-gray-300">
-                        <svg class="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>24/7 Customer Support</span>
-                    </li>
-                    <li class="flex items-center text-gray-300">
-                        <svg class="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>Secure & Regulated Platform</span>
-                    </li>
-                    <?php if ($plan->recid == 4): ?>
-                    <li class="flex items-center text-gray-300">
-                        <svg class="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>Lifetime Bot Usage & Networking Rewards</span>
-                    </li>
-                    <?php endif; ?>
-                </ul>
+            <div class="ge-price-diff">
+              <div class="lbl">Price Difference</div>
+              <div class="val" id="price_difference_<?php echo $pid; ?>">Calculating...</div>
+              <div class="arb" id="arbitrage_opportunity_<?php echo $pid; ?>"></div>
             </div>
-            <?php endif; ?>
+            <p class="ge-price-note"><i class="fas fa-sync-alt"></i> Prices update every 30 seconds</p>
+          </div>
+        </div>
 
-            <!-- Submit Button -->
-            <div class="pt-4">
-                <button type="submit" 
-                    class="w-full bg-gradient-to-r from-<?php echo $form_color; ?>-500 to-<?php echo $form_color; ?>-600 text-white font-bold py-4 px-6 rounded-lg hover:from-<?php echo $form_color; ?>-600 hover:to-<?php echo $form_color; ?>-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                    <i class="fas fa-check-circle mr-2"></i> Invest Now
-                </button>
-            </div>
-        </form>
-    </div>
-    
-    <?php } ?>
+        <script>
+        let priceInterval<?php echo $pid; ?> = null;
+        function fetchPrices<?php echo $pid; ?>() {
+          const exchangePair = document.getElementById('exchange_pair_<?php echo $pid; ?>').value;
+          const coin = document.getElementById('exchange_coin_<?php echo $pid; ?>').value;
+          const priceDisplay = document.getElementById('price_display_<?php echo $pid; ?>');
+          if (priceInterval<?php echo $pid; ?>) clearInterval(priceInterval<?php echo $pid; ?>);
+          if (!exchangePair || !coin) {
+            priceDisplay.style.display = 'none';
+            return;
+          }
+          priceDisplay.style.display = 'block';
+          const exchanges = exchangePair.split('-');
+          const exchange1 = exchanges[0].charAt(0).toUpperCase() + exchanges[0].slice(1);
+          const exchange2 = exchanges[1].charAt(0).toUpperCase() + exchanges[1].slice(1);
+          document.getElementById('exchange1_name_<?php echo $pid; ?>').textContent = exchange1;
+          document.getElementById('exchange2_name_<?php echo $pid; ?>').textContent = exchange2;
+          updatePrices<?php echo $pid; ?>(coin, exchange1, exchange2);
+          priceInterval<?php echo $pid; ?> = setInterval(function () {
+            updatePrices<?php echo $pid; ?>(coin, exchange1, exchange2);
+          }, 30000);
+        }
+        async function updatePrices<?php echo $pid; ?>(coin, exchange1, exchange2) {
+          try {
+            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=' + coin + '&vs_currencies=usd&include_24hr_change=true');
+            const data = await response.json();
+            if (data[coin] && data[coin].usd) {
+              const basePrice = data[coin].usd;
+              const variation1 = (Math.random() * 0.4 + 0.1) / 100;
+              const variation2 = (Math.random() * 0.4 + 0.1) / 100;
+              const price1 = basePrice * (1 + variation1);
+              const price2 = basePrice * (1 - variation2);
+              document.getElementById('exchange1_price_<?php echo $pid; ?>').textContent =
+                '$' + price1.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+              document.getElementById('exchange2_price_<?php echo $pid; ?>').textContent =
+                '$' + price2.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+              const difference = Math.abs(price1 - price2);
+              const percentageDiff = ((difference / Math.min(price1, price2)) * 100).toFixed(2);
+              const higherExchange = price1 > price2 ? exchange1 : exchange2;
+              const lowerExchange = price1 > price2 ? exchange2 : exchange1;
+              document.getElementById('price_difference_<?php echo $pid; ?>').innerHTML =
+                '$' + difference.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
+                ' <span style="font-size:0.8rem">(' + percentageDiff + '%)</span>';
+              document.getElementById('arbitrage_opportunity_<?php echo $pid; ?>').innerHTML =
+                '<i class="fas fa-info-circle"></i> Buy on ' + lowerExchange + ', Sell on ' + higherExchange;
+            }
+          } catch (error) {
+            console.error('Error fetching prices:', error);
+            document.getElementById('exchange1_price_<?php echo $pid; ?>').innerHTML = '<span style="color:#f87171;font-size:0.85rem">Error</span>';
+            document.getElementById('exchange2_price_<?php echo $pid; ?>').innerHTML = '<span style="color:#f87171;font-size:0.85rem">Error</span>';
+          }
+        }
+        </script>
+        <?php } ?>
+      </div>
+
+      <?php if (in_array($pid, array(1, 4), true)) { ?>
+      <div class="ge-benefits">
+        <h4>Plan Benefits</h4>
+        <ul>
+          <li><i class="fas fa-check-circle"></i><span>24/7 Customer Support</span></li>
+          <li><i class="fas fa-check-circle"></i><span>Secure &amp; Regulated Platform</span></li>
+          <?php if ($pid == 4) { ?>
+          <li><i class="fas fa-check-circle"></i><span>Lifetime Bot Usage &amp; Networking Rewards</span></li>
+          <?php } ?>
+        </ul>
+      </div>
+      <?php } ?>
+
+      <button type="submit" class="ge-btn-gold"><i class="fas fa-check-circle"></i> Invest Now</button>
+    </form>
+  </div>
+  <?php } ?>
 </div>
 
-<!-- JS for Tab Toggle -->
 <script>
-    function selectPackage(element, tabId, packageName) {
-        // Remove active state from all cards
-        document.querySelectorAll('.package-card').forEach(card => {
-            card.classList.remove('border-indigo-600', 'ring-4', 'ring-indigo-200', 'scale-105');
-            card.classList.add('border-gray-200');
-        });
-
-        // Add active state to clicked card with enhanced effects
-        element.classList.remove('border-gray-200');
-        element.classList.add('border-indigo-600', 'ring-4', 'ring-indigo-200', 'scale-105');
-
-        // Hide all tabs
-        document.querySelectorAll('[id^="tab"]').forEach(tab => tab.classList.add('hidden'));
-
-        // Show selected tab
-        document.getElementById(tabId).classList.remove('hidden');
-
-        // Scroll smoothly to content
-        document.getElementById(tabId).scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-
-        // Update hidden input if exists
-        const selectedPackageInput = document.getElementById('selectedPackage');
-        if (selectedPackageInput) {
-            selectedPackageInput.value = packageName;
-        }
-    }
+function selectPackage(element, tabId, packageName) {
+  document.querySelectorAll('.ge-plan-card').forEach(function (card) {
+    card.classList.remove('active');
+  });
+  element.classList.add('active');
+  document.querySelectorAll('.ge-form-wrap').forEach(function (tab) {
+    tab.classList.remove('show');
+  });
+  var tab = document.getElementById(tabId);
+  if (tab) {
+    tab.classList.add('show');
+    tab.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  var selectedPackageInput = document.getElementById('selectedPackage');
+  if (selectedPackageInput) {
+    selectedPackageInput.value = packageName;
+  }
+}
 </script>
 
-<?php
-include_once 'footer.php';
-?>
+<?php include_once 'footer.php'; ?>

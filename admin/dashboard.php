@@ -61,6 +61,7 @@ include_once 'header.php';
             <div class="sparkline4 text-center"></div>
         </div>
     </div>*/?>
+    <?php /* Referral Income / Bonus card hidden
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
         <div class="statistic-box statistic-filled-4">
             <h2><span class=count-number2><?php echo get_sum('income_direct', 'amount', 'type=0')*1;?></span></h2>
@@ -69,6 +70,7 @@ include_once 'header.php';
             <div class="sparkline4 text-center"></div>
         </div>
     </div>
+    */ ?>
     <?php /*<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
         <div class="statistic-box statistic-filled-4">
             <h2><span class=count-number2><?php echo get_sum('income_direct', 'amount', 'type=1')*1;?></span></h2>
@@ -92,7 +94,7 @@ include_once 'header.php';
             <i class="ti-bag statistic_icon"></i>
             <div class="sparkline4 text-center"></div>
         </div>
-    </div>*/?>
+    </div>*/ ?>
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
         <div class="statistic-box statistic-filled-4">
             <h2><span class=count-number2><?php echo get_sum('income_level', 'amount', 'type=2')*1;?></span></h2>
@@ -118,6 +120,7 @@ include_once 'header.php';
             <div class="sparkline4 text-center"></div>
         </div>
     </div>*/?>
+    <?php /* Reward Income & Royalty Income removed from admin dashboard
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
         <div class="statistic-box statistic-filled-2">
             <h2><span class=count-number2><?php echo get_sum('income_royalty', 'amount', 'type=0')*1;?></span></h2>
@@ -126,14 +129,14 @@ include_once 'header.php';
             <div class="sparkline2 text-center"></div>
         </div>
     </div>
-    <?php /*<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
         <div class="statistic-box statistic-filled-2">
             <h2><span class=count-number2><?php echo get_sum('income_royalty', 'amount', 'type=1')*1;?></span></h2>
             <div class=small>Fast Track Bonus</div>
             <i class="ti-user statistic_icon"></i>
             <div class="sparkline2 text-center"></div>
         </div>
-    </div>*/?>
+    </div>
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
         <div class="statistic-box statistic-filled-2">
             <h2><span class=count-number2><?php echo get_sum('income_royalty', 'amount', 'type=2')*1;?></span></h2>
@@ -142,7 +145,7 @@ include_once 'header.php';
             <div class="sparkline2 text-center"></div>
         </div>
     </div>
-    <?php /*<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
         <div class="statistic-box statistic-filled-2">
             <h2><span class=count-number2><?php echo get_sum('income_royalty', 'amount', 'type=2')*1;?></span></h2>
             <div class=small>Special Reward Income</div>

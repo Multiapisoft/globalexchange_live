@@ -167,7 +167,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     .balance {
         font-size: 24px;
         font-weight: 600;
-        color: #f0b90b;
+        color: #d4af37;
     }
 
     .content-header {
@@ -235,8 +235,8 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     }
 
     .exchange-card.active {
-        background: rgba(240, 185, 11, 0.15);
-        border: 1px solid rgba(240, 185, 11, 0.3);
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.3);
     }
 
     .exchange-name {
@@ -365,7 +365,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     .stat-value {
         font-size: 24px;
         font-weight: 600;
-        color: #f0b90b;
+        color: #d4af37;
     }
 
     .activation-container {
@@ -376,7 +376,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     }
 
     .activate-button {
-        background: linear-gradient(135deg, #f0b90b 0%, #d8a600 100%);
+        background: linear-gradient(135deg, #d4af37 0%, #d8a600 100%);
         color: #000;
         border: none;
         padding: 15px 40px;
@@ -384,13 +384,13 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(240, 185, 11, 0.4);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
         transition: all 0.3s ease;
     }
 
     .activate-button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(240, 185, 11, 0.6);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.6);
     }
 
     @keyframes flashGreen {
@@ -477,7 +477,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     }
 
     .trading-pair-display {
-        color: #f0b90b;
+        color: #d4af37;
         font-size: 18px;
         font-weight: 600;
         display: flex;
@@ -508,7 +508,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     }
 
     .investment-badge.demo {
-        background: linear-gradient(135deg, #f0b90b 0%, #cea000 100%);
+        background: linear-gradient(135deg, #d4af37 0%, #cea000 100%);
     }
 
     /* Responsive styles for header section */
@@ -725,7 +725,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
             <div style="font-size: 14px; color: #848e9c;">
                 Please make an investment with Self-Trading or Bot Trading to start live trading.
             </div>
-            <a href="trade.php" style="display: inline-block; margin-top: 20px; background: linear-gradient(135deg, #f0b90b 0%, #d8a600 100%); color: #000; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: 600;">
+            <a href="trade.php" style="display: inline-block; margin-top: 20px; background: linear-gradient(135deg, #d4af37 0%, #d8a600 100%); color: #000; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: 600;">
                 <i class="fas fa-plus-circle"></i> Make Investment
             </a>
         <?php else: ?>

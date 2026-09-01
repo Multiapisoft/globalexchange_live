@@ -169,8 +169,7 @@ admin();
                         <a href="#" class="material-ripple"><i class="material-icons">widgets</i> CMS<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a href="cms_package.php">Package</a></li>
-                            <li><a href="cms_hot_news.php">Hot News</a></li>
-                            <?php $rs = my_query("SELECT * FROM cms_menu WHERE status = 0");
+                            <?php $rs = my_query("SELECT * FROM cms_menu WHERE status = 0 AND title != 'Achiever'");
                             while ($r = my_fetch_object($rs)) {
                             ?>
                                 <li><a href="cms.php?mid=<?php echo $r->recid; ?>"><?php echo $r->title . (($r->type) ? 's' : ''); ?></a></li>

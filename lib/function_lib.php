@@ -1810,6 +1810,45 @@ function get_total_earnings($uid)
 }
 
 /**
+ * Earning wallet balance derived from income credits minus withdrawal requests.
+ */
+function get_member_earning_wallet($uid)
+{
+    $uid = (int) $uid;
+    $income = get_total_earnings($uid);
+    $withdrawn = (float) get_sum('withdrawal_block', 'amount', "uid='" . $uid . "'");
+    return max(0, round($income - $withdrawn, 2));
+}
+
+/**
+ * Package wallet balance derived from deposits, transfers, and investments.
+ */
+function get_member_package_wallet($uid)
+{
+    $uid = (int) $uid;
+    $deposits = (float) get_sum('deposit_block', 'amount', "uid='" . $uid . "' AND status=1");
+    $investments = (float) get_sum('investments', 'amount', "uid='" . $uid . "'");
+    $transfer_in = (float) get_sum('fund_transfer', 'amount', "uid='" . $uid . "'");
+    $transfer_out = (float) get_sum('fund_transfer', 'amount', "from_uid='" . $uid . "'");
+    return max(0, round($deposits + $transfer_in - $transfer_out - $investments, 2));
+}
+
+/**
+ * Sync user.wallet and user.wallet_topup from transaction ledger.
+ */
+function sync_member_wallet_balances($uid)
+{
+    $uid = (int) $uid;
+    if ($uid <= 0) {
+        return false;
+    }
+    $earning_wallet = get_member_earning_wallet($uid);
+    $package_wallet = get_member_package_wallet($uid);
+    my_query("UPDATE user SET wallet='" . $earning_wallet . "', wallet_topup='" . $package_wallet . "' WHERE uid='" . $uid . "'");
+    return true;
+}
+
+/**
  * Level ROI unlock: L1–L2 need 2 directs; each further direct unlocks next level (L3→10).
  */
 function get_level_roi_required_directs($level)

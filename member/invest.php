@@ -60,27 +60,27 @@ $active_investors = 1250 + rand(0, 100);
 
     :root {
         /* Fresh Color Palette */
-        --bg-primary: #f8fafc;
-        --bg-secondary: #ffffff;
-        --bg-accent: #e2e8f0;
-        --text-primary: #1a202c;
-        --text-secondary: #4a5568;
-        --text-muted: #718096;
-        --brand-primary: #4f46e5;
-        --brand-secondary: #7c3aed;
+        --bg-primary: #050505;
+        --bg-secondary: #121212;
+        --bg-accent: #1a1a1a;
+        --text-primary: #f5f5f5;
+        --text-secondary: #a0a0a0;
+        --text-muted: #6b6b6b;
+        --brand-primary: #d4af37;
+        --brand-secondary: #b8860b;
         --success: #10b981;
         --warning: #f59e0b;
         --danger: #ef4444;
-        --info: #3b82f6;
-        --border: #e5e7eb;
-        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --info: #6366f1;
+        --border: rgba(212, 175, 55, 0.22);
+        --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
         --radius: 12px;
         --radius-lg: 16px;
     }
 
     body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
         background: var(--bg-primary);
         color: var(--text-primary);
         line-height: 1.6;
@@ -508,13 +508,13 @@ $active_investors = 1250 + rand(0, 100);
     .plan-3 .promo .price,
     .plan-4 .ic,
     .plan-4 .promo .price {
-        background: linear-gradient(135deg, #F0B90B, #FFDD33);
+        background: linear-gradient(135deg, #d4af37, #FFDD33);
     }
 
     .button {
         border: none;
         border-radius: 4px;
-        background: #F0B90B;
+        background: #d4af37;
         color: #0B0E11;
         padding: 10px 37px;
         font-weight: 600;
@@ -558,7 +558,7 @@ $active_investors = 1250 + rand(0, 100);
     .promo:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        border-color: #F0B90B;
+        border-color: #d4af37;
     }
 
     .promo:before {
@@ -569,7 +569,7 @@ $active_investors = 1250 + rand(0, 100);
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: rgba(240, 185, 11, 0.05);
+        background: rgba(212, 175, 55, 0.05);
         z-index: 0;
     }
 
@@ -581,7 +581,7 @@ $active_investors = 1250 + rand(0, 100);
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: rgba(240, 185, 11, 0.05);
+        background: rgba(212, 175, 55, 0.05);
         z-index: 0;
     }
 
@@ -611,7 +611,7 @@ $active_investors = 1250 + rand(0, 100);
     .plan-3 .promo .price,
     .plan-4 .ic,
     .plan-4 .promo .price {
-        background: linear-gradient(135deg, #F0B90B, #FFDD33);
+        background: linear-gradient(135deg, #d4af37, #FFDD33);
     }
 
     .promo .deal span {
@@ -623,7 +623,7 @@ $active_investors = 1250 + rand(0, 100);
         font-size: 1.3rem;
         font-weight: 700;
         margin-bottom: 8px;
-        color: #F0B90B;
+        color: #d4af37;
     }
 
     .promo .deal span:last-of-type {
@@ -656,13 +656,13 @@ $active_investors = 1250 + rand(0, 100);
     .promo .features li {
         padding: 10px 0;
         color: #eaecef;
-        border-bottom: 1px solid rgba(240, 185, 11, 0.1);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
         position: relative;
     }
 
     .promo .features li:before {
         content: '✓';
-        color: #F0B90B;
+        color: #d4af37;
         margin-right: 8px;
         font-weight: bold;
     }
@@ -683,7 +683,7 @@ $active_investors = 1250 + rand(0, 100);
         cursor: pointer;
         position: relative;
         z-index: 1;
-        background: #F0B90B;
+        background: #d4af37;
         color: #0B0E11;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -705,7 +705,7 @@ $active_investors = 1250 + rand(0, 100);
     .plan-2 .button,
     .plan-3 .button,
     .plan-4 .button {
-        background: #F0B90B;
+        background: #d4af37;
         color: #0B0E11;
     }
 

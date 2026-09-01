@@ -26,701 +26,525 @@ $total_earnings_query = "SELECT SUM(topup) as total FROM user WHERE refer_id = '
 $total_earnings_result = my_query($total_earnings_query);
 $total_earnings_row = $total_earnings_result ? mysqli_fetch_object($total_earnings_result) : null;
 $total_earnings = ($total_earnings_row && $total_earnings_row->total) ? $total_earnings_row->total : 0;
+
+$active_directs = 0;
+foreach ($result_data as $r) {
+    if (((float) $r->topup) > 0) {
+        $active_directs++;
+    }
+}
+
+$referral_link = SITE_URL . '/soft/member/register.php?ref=' . $uid;
 ?>
 
 <style>
-    /* Menu and Submenu Text Colors - Light */
-    #side-menu li a,
-    #side-menu li a .menu-text,
-    .nav-second-level li a,
-    .nav-second-level li a i,
-    .sidebar .menu-text {
-        color: #eaecef !important;
-    }
-
-    /* Fresh Direct Referral Theme - Same as Dashboard */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    :root {
-        /* Dark Color Palette aligned with member dashboard */
-        --bg-primary: #0b0e11;
-        --bg-secondary: #1e2329;
-        --bg-accent: #2b3139;
-        --text-primary: #eaecef;
-        --text-secondary: #848e9c;
-        --text-muted: #6c757d;
-        --brand-primary: #4f46e5;
-        --brand-secondary: #7c3aed;
-        --success: #02c076;
-        --warning: #f0b90b;
-        --danger: #f6465d;
-        --info: #3b82f6;
-        --border: #2c3137;
-        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
-        --radius: 12px;
-        --radius-lg: 16px;
-    }
-
-    body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        background: var(--bg-primary);
-        color: var(--text-primary);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-    }
-
-    #page-wrapper {
-        background: var(--bg-primary);
-        margin-top: 0;
-    }
-
-    .content-header {
-        display: none;
-    }
-
-    /* Fresh Container */
-    .fresh-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    /* Fresh Referral Header */
-    .fresh-referral-header {
-        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-        border-radius: var(--radius-lg);
-        padding: 32px;
-        color: white;
-        margin-bottom: 32px;
-        position: relative;
-        overflow: hidden;
-        text-align: center;
-    }
-
-    .fresh-referral-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-        animation: rotate 20s linear infinite;
-    }
-
-    @keyframes rotate {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    .fresh-referral-header-content {
-        position: relative;
-        z-index: 2;
-    }
-
-    .fresh-referral-header h1 {
-        font-size: 2.5rem;
-        font-weight: 900;
-        margin-bottom: 12px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .fresh-referral-header p {
-        font-size: 2rem;
-        font-weight: 600;
-        opacity: 0.9;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .fresh-referral-header-icon {
-        font-size: 3rem;
-        margin-bottom: 16px;
-        opacity: 0.9;
-    }
-
-    /* Fresh Stats Grid */
-    .fresh-stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 24px;
-        margin-bottom: 32px;
-    }
-
-    .fresh-stat-card {
-        background: var(--bg-secondary);
-        border-radius: var(--radius-lg);
-        padding: 24px;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .fresh-stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--brand-primary);
-    }
-
-    .fresh-stat-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        flex-shrink: 0;
-    }
-
-    .fresh-stat-content {
-        flex: 1;
-    }
-
-    .fresh-stat-label {
-        font-size: 2rem;
-        color: var(--text-secondary);
-        font-weight: 600;
-        margin-bottom: 4px;
-    }
-
-    .fresh-stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: var(--text-primary);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Fresh Card */
-    .fresh-card {
-        background: var(--bg-secondary);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
-        margin-bottom: 32px;
-        overflow: hidden;
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .fresh-card:hover {
-        box-shadow: var(--shadow-lg);
-        transform: translateY(-2px);
-    }
-
-    /* Fresh Section Header */
-    .fresh-section-header {
-        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-        color: white;
-        padding: 20px 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .fresh-section-title {
-        font-size: 2rem;
-        font-weight: 800;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        text-shadow: 0 2px 4px rgba(255, 255, 255, 0.2);
-    }
-
-    .fresh-section-icon {
-        font-size: 1.6rem;
-    }
-
-    /* Fresh Search Container */
-    .fresh-search-container {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .fresh-search-input {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 25px;
-        padding: 10px 18px;
-        color: white;
-        font-size: 1.1rem;
-        font-weight: 500;
-        width: 280px;
-        transition: all 0.3s ease;
-    }
-
-    .fresh-search-input::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-    }
-
-    .fresh-search-input:focus {
-        outline: none;
-        background: rgba(255, 255, 255, 0.25);
-        border-color: rgba(255, 255, 255, 0.5);
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-    }
-
-    .fresh-search-icon {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 1rem;
-    }
-
-    /* Fresh Table Container */
-    .fresh-table-container {
-        padding: 0;
-        overflow-x: auto;
-    }
-
-    /* Fresh Table Styling */
-    .fresh-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        background: var(--bg-secondary);
-    }
-
-    .fresh-table td {
-        padding: 20px 24px;
-        border-bottom: 1px solid var(--border);
-        color: #eaecef !important;
-        font-size: 1rem;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        background: var(--bg-secondary);
-    }
-
-    .fresh-table td h4,
-    .fresh-table .fresh-user-name,
-    .fresh-table .fresh-user-id {
-        color: #eaecef !important;
-    }
-
-    .fresh-table th {
-        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-        color: white !important;
-        font-size: 0.95rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 20px 24px;
-        text-align: left;
-        border: none;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        letter-spacing: 0.5px;
-    }
-
-    .fresh-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .fresh-table tr:hover td {
-        background: var(--bg-accent);
-        transform: translateX(2px);
-    }
-
-    /* Fresh User Info */
-    .fresh-user-info {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .fresh-user-avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        font-weight: 700;
-        flex-shrink: 0;
-        box-shadow: var(--shadow);
-        text-transform: uppercase;
-    }
-
-    .fresh-user-details {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-    }
-
-    .fresh-user-name {
-        font-weight: 700;
-        color: var(--text-primary);
-        font-size: 2rem;
-    }
-
-    .fresh-user-id {
-        font-size: 2rem;
-        color: var(--text-muted);
-        font-weight: 600;
-    }
-
-    /* Fresh Package Badge */
-    .fresh-package-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 16px;
-        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-        color: white;
-        border-radius: 20px;
-        font-size: 2rem;
-        font-weight: 700;
-        box-shadow: var(--shadow);
-    }
-
-    /* Fresh Mobile Responsive */
-    @media (max-width: 768px) {
-        .fresh-container {
-            padding: 16px;
-        }
-
-        .fresh-referral-header {
-            padding: 24px;
-        }
-
-        .fresh-referral-header h1 {
-            font-size: 2rem;
-            font-weight: 900;
-        }
-
-        .fresh-referral-header p {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .fresh-stats-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        .fresh-table-container {
-            padding: 16px;
-            overflow-x: auto;
-        }
-
-        .fresh-table th,
-        .fresh-table td {
-            padding: 12px 16px;
-            font-size: 0.9rem;
-        }
-
-        .fresh-section-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
-    }
-
-    /* Fresh Animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .fresh-card {
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .fresh-card:nth-child(1) {
-        animation-delay: 0.1s;
-    }
-
-    .fresh-card:nth-child(2) {
-        animation-delay: 0.2s;
-    }
-
-    .fresh-card:nth-child(3) {
-        animation-delay: 0.3s;
-    }
-
-    @media (max-width: 768px) {
-        h3 {
-            font-size: 16px !important;
-        }
-
-        .fresh-stat-card {
-            padding: 5px 16px !important;
-        }
-
-        .fresh-stat-icon {
-            width: 40px !important;
-            height: 40px !important;
-        }
-
-        .fresh-stat-content {
-            flex: 1 !important;
-        }
-
-        .fresh-package-badge {
-            padding: 5px 16px !important;
-            font-size: 16px !important;
-        }
-
-        .fresh-user-name {
-            font-size: 16px !important;
-        }
-
-        .fresh-user-id {
-            font-size: 14px !important;
-        }
-
-        .fresh-user-details {
-            gap: 1px !important;
-        }
-
-        .fresh-search-input {
-            width: 112px !important;
-            font-size: 12px !important;
-        }
-    }
+/* Direct Referral — match Desktop network.html + profile theme */
+.content-header { display: none !important; }
+
+.ge-net {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.25rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.ge-net *,
+.ge-net *::before,
+.ge-net *::after { box-sizing: border-box; }
+
+.ge-net-head h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  color: #fff;
+}
+.ge-net-head p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.ge-panel {
+  border-radius: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: #141414;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.ge-panel-pad {
+  padding: 1.25rem 1.35rem;
+}
+@media (min-width: 640px) {
+  .ge-panel-pad { padding: 1.5rem 1.75rem; }
+}
+
+.ge-ref-top {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+@media (min-width: 1024px) {
+  .ge-ref-top {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.ge-label-gold {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+.ge-ref-top .sub {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.ge-copy-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+@media (min-width: 640px) {
+  .ge-copy-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+.ge-copy-row input {
+  flex: 1;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: #0a0a0a;
+  color: #e5e5e5;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.ge-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1a1408;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.28);
+}
+.ge-btn-gold:hover { filter: brightness(1.06); }
+
+.ge-mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .ge-mini-stats { min-width: 280px; }
+}
+.ge-mini-stat {
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+}
+.ge-mini-stat .n {
+  margin: 0;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ge-mini-stat .n.silver {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: #c0c0c0;
+}
+.ge-mini-stat .l {
+  margin: 0.35rem 0 0;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.ge-section-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+.ge-section-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+.ge-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.ge-badge-gold {
+  background: rgba(212, 175, 55, 0.15);
+  color: #f5c842;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+.ge-badge-success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+.ge-badge-muted {
+  background: rgba(255, 255, 255, 0.06);
+  color: #9ca3af;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ge-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: #0a0a0a;
+  padding: 0.45rem 0.75rem;
+  min-width: 180px;
+  max-width: 280px;
+  flex: 1;
+}
+.ge-search i { color: #9ca3af; font-size: 0.85rem; }
+.ge-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+}
+.ge-search input::placeholder { color: #6b7280; }
+
+.ge-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.ge-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+.ge-table th {
+  text-align: left;
+  padding: 0.9rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #d4af37;
+  background: #111;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  white-space: nowrap;
+}
+.ge-table td {
+  padding: 0.95rem 1rem;
+  font-size: 0.92rem;
+  color: #e5e5e5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  vertical-align: middle;
+  background: #141414;
+}
+.ge-table tbody tr:hover td {
+  background: rgba(212, 175, 55, 0.05);
+}
+.ge-table tbody tr:last-child td { border-bottom: none; }
+
+.ge-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.ge-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1408;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+  text-transform: uppercase;
+}
+.ge-user-name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+}
+.ge-user-id {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.ge-amt {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1a1408;
+  background: linear-gradient(135deg, #ffe566 0%, #d4af37 50%, #b8860b 100%);
+}
+
+.ge-empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+.ge-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.animate-in {
+  animation: geFadeUp 0.4s ease both;
+}
+@keyframes geFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .ge-section-bar { padding: 1rem; }
+  .ge-search { max-width: none; width: 100%; }
+}
 </style>
 
-<!-- Fresh Direct Referral Container -->
-<div class="fresh-container">
-    <!-- Fresh Referral Header -->
-    <div class="fresh-referral-header">
-        <div class="fresh-referral-header-content">
-            <div class="fresh-referral-header-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <h1>Direct Referrals</h1>
-            <h3>Manage your referral network</h3>
+<div class="ge-net">
+  <div class="ge-net-head">
+    <h1>Direct Referrals</h1>
+    <p>Manage your referral network</p>
+  </div>
+
+  <!-- Referral link + stats (network.html) -->
+  <section class="ge-panel ge-panel-pad animate-in">
+    <div class="ge-ref-top">
+      <div style="flex:1;min-width:0;">
+        <p class="ge-label-gold">Referral link</p>
+        <p class="sub">Share to grow your directs and unlock Level ROI</p>
+        <div class="ge-copy-row">
+          <input type="text" id="refLink" readonly value="<?php echo htmlspecialchars($referral_link); ?>" />
+          <button type="button" class="ge-btn-gold" id="copyRefBtn" data-copy="<?php echo htmlspecialchars($referral_link); ?>">
+            <i class="fas fa-copy"></i> Copy Link
+          </button>
         </div>
+      </div>
+      <div class="ge-mini-stats">
+        <div class="ge-mini-stat">
+          <p class="n"><?php echo (int) $total_referrals; ?></p>
+          <p class="l">Directs</p>
+        </div>
+        <div class="ge-mini-stat">
+          <p class="n silver"><?php echo (int) $active_directs; ?></p>
+          <p class="l">Active</p>
+        </div>
+        <?php /* Business card hidden
+        <div class="ge-mini-stat">
+          <p class="n">$<?php echo number_format((float) $total_earnings, 0); ?></p>
+          <p class="l">Business</p>
+        </div>
+        */ ?>
+      </div>
+    </div>
+  </section>
+
+  <!-- My Directs table -->
+  <section class="ge-panel animate-in">
+    <div class="ge-section-bar">
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <h3 class="ge-section-title">My Directs</h3>
+        <span class="ge-badge ge-badge-gold"><?php echo (int) $total_referrals; ?> Members</span>
+      </div>
+      <div class="ge-search">
+        <i class="fas fa-search" id="searchIcon"></i>
+        <input type="text" id="referralSearchInput" placeholder="Search name, ID, mobile...">
+      </div>
     </div>
 
-    <!-- Fresh Stats Grid -->
-    <div class="fresh-stats-grid">
-        <div class="fresh-stat-card">
-            <div class="fresh-stat-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="fresh-stat-content">
-                <div class="fresh-stat-label">
-                    <h3>Total Referrals</h3>
-                </div>
-                <div class="fresh-stat-value"><?php echo $total_referrals; ?></div>
-            </div>
-        </div>
+    <div class="ge-table-wrap">
+      <table class="ge-table" id="referralTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>Contact</th>
+            <th>Joined</th>
+            <th>Activation</th>
+            <?php /* <th>Package</th>
+            <th>Business</th> */ ?>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          if (empty($result_data)) {
+              echo '<tr><td colspan="6" class="ge-empty">No direct referrals found.</td></tr>';
+          }
 
-        <div class="fresh-stat-card">
-            <div class="fresh-stat-icon">
-                <i class="fas fa-dollar-sign"></i>
-            </div>
-            <div class="fresh-stat-content">
-                <div class="fresh-stat-label">
-                    <h3>Total Business</h3>
-                </div>
-                <div class="fresh-stat-value">$<?php echo number_format($total_earnings, 2); ?></div>
-            </div>
-        </div>
-
-        <!-- <div class="fresh-stat-card">
-            <div class="fresh-stat-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="fresh-stat-content">
-                <div class="fresh-stat-label"><h3>Active Members</h3></div>
-                <div class="fresh-stat-value"><?php echo $total_referrals; ?></div>
-            </div>
-        </div> -->
+          $i = 0;
+          foreach ($result_data as $row) {
+              $i++;
+              $is_active = ((float) $row->topup) > 0;
+              $initial = strtoupper(substr(trim((string) $row->name), 0, 1));
+              if ($initial === '') {
+                  $initial = 'U';
+              }
+              ?>
+              <tr>
+                <td><?php echo $i; ?></td>
+                <td>
+                  <div class="ge-user">
+                    <div class="ge-avatar"><?php echo htmlspecialchars($initial); ?></div>
+                    <div>
+                      <p class="ge-user-name"><?php echo htmlspecialchars($row->name); ?></p>
+                      <p class="ge-user-id"><?php echo htmlspecialchars($row->login_id); ?></p>
+                    </div>
+                  </div>
+                </td>
+                <td><?php echo htmlspecialchars($row->mobile); ?></td>
+                <td><?php echo date("d M, Y", strtotime($row->datetime)); ?></td>
+                <td>
+                  <?php
+                  if (!empty($row->active_date) && $row->active_date !== '0000-00-00 00:00:00' && $row->active_date !== '0000-00-00') {
+                      echo date('d M, Y', strtotime($row->active_date));
+                  } else {
+                      echo '-';
+                  }
+                  ?>
+                </td>
+                <?php /* <td><span class="ge-amt">$<?php echo $row->topup * 1; ?></span></td>
+                <td><span class="ge-amt">$<?php echo number_format($row->teamb + $row->topup, 2); ?></span></td> */ ?>
+                <td>
+                  <?php if ($is_active): ?>
+                    <span class="ge-badge ge-badge-success">Active</span>
+                  <?php else: ?>
+                    <span class="ge-badge ge-badge-muted">Inactive</span>
+                  <?php endif; ?>
+                </td>
+              </tr>
+          <?php } ?>
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <!-- Fresh Referral List Card -->
-    <div class="fresh-card">
-        <div class="fresh-section-header">
-            <h2 class="fresh-section-title">
-                <i class="fas fa-list"></i>
-                Referral List
-            </h2>
-            <div class="fresh-search-container">
-                <i class="fas fa-search fresh-search-icon"></i>
-                <input type="text" id="referralSearchInput" class="fresh-search-input"
-                    placeholder="Search by name, ID, mobile...">
-            </div>
-        </div>
-        <div class="fresh-table-container">
-            <table class="fresh-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>User</th>
-                        <th>Contact</th>
-                        <th>Joined</th>
-                        <th>Activation</th>
-                        <th>Package</th>
-                        <th>Business</th>
-                        <?php /* <th>Leg</th> */ ?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if (empty($result_data)) {
-                        echo '<tr><td colspan="7" style="text-align:center;padding:40px;color:#848e9c;">No direct referrals found.</td></tr>';
-                    }
-
-                    $i = 0;
-                    foreach ($result_data as $row) {
-                        $i++;
-                        ?>
-                        <tr>
-                            <td><?php echo $i; ?></td>
-                            <td>
-                                <div class="fresh-user-info">
-                                    <div class="fresh-user-avatar"><?php echo substr($row->name, 0, 1); ?></div>
-                                    <div class="fresh-user-details">
-                                        <div class="fresh-user-name"><?php echo $row->name; ?></div>
-                                        <div class="fresh-user-id"><?php echo $row->login_id; ?></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="fresh-user-details">
-                                    <div class="fresh-user-name">
-                                        <h4><?php echo $row->mobile; ?></h4>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h4><?php echo date("d M, Y", strtotime($row->datetime)); ?></h4>
-                            </td>
-                            <td>
-                                <h4>
-                                    <?php
-                                    if (!empty($row->active_date) && $row->active_date !== '0000-00-00 00:00:00' && $row->active_date !== '0000-00-00') {
-                                        echo date('d M, Y', strtotime($row->active_date));
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </h4>
-                            </td>
-                            <td>
-                                <span class="fresh-package-badge">$<?php echo $row->topup * 1; ?></span>
-                            </td>
-                            <td>
-                                <span class="fresh-package-badge">
-                                    $<?php echo number_format($row->teamb + $row->topup, 2); ?>
-                                </span>
-                            </td>
-                            <?php /* 
-                            <td>
-                                <?php
-                                $current_total_business = $row->teamb + $row->topup;
-                                $leg_status = 'Other Leg (20%)';
-                                $leg_color = '#f59e0b';
-                                ?>
-                                <div class="fresh-user-details">
-                                    <div class="fresh-user-name">
-                                        <h4 style="color: <?php echo $leg_color; ?>; font-weight: 700;">
-                                            <?php echo $leg_status; ?>
-                                        </h4>
-                                    </div>
-                                </div>
-                            </td>
-                            */ ?>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-
-
-            </table>
-        </div>
-       
-    </div>
+  <p class="ge-hint">Share your referral link to grow directs. Active members contribute to your network business.</p>
 </div>
 
 <script>
-    // Fresh Referral Search Functionality
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('referralSearchInput');
-        const table = document.querySelector('.fresh-table tbody');
-        const rows = table.querySelectorAll('tr');
+document.addEventListener('DOMContentLoaded', function () {
+  var searchInput = document.getElementById('referralSearchInput');
+  var table = document.querySelector('#referralTable tbody');
+  if (!searchInput || !table) return;
 
-        searchInput.addEventListener('input', function () {
-            const searchTerm = this.value.toLowerCase().trim();
+  var rows = table.querySelectorAll('tr');
 
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                let found = false;
+  searchInput.addEventListener('input', function () {
+    var searchTerm = this.value.toLowerCase().trim();
 
-                // Search in all cells
-                cells.forEach(cell => {
-                    const text = cell.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        found = true;
-                    }
-                });
-
-                // Show/hide row based on search result
-                if (found || searchTerm === '') {
-                    row.style.display = '';
-                    row.style.animation = 'fadeInUp 0.3s ease-out';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            // Show "No results found" message if no rows are visible
-            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
-
-            // Remove existing no-results message
-            const existingMessage = table.querySelector('.no-results-row');
-            if (existingMessage) {
-                existingMessage.remove();
-            }
-
-            if (visibleRows.length === 0 && searchTerm !== '') {
-                const noResultsRow = document.createElement('tr');
-                noResultsRow.className = 'no-results-row';
-                noResultsRow.innerHTML = `
-                <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 1.1rem;">
-                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i><br>
-                    No referrals found matching "${searchTerm}"
-                </td>
-            `;
-                table.appendChild(noResultsRow);
-            }
-        });
-
-        // Add search icon animation
-        searchInput.addEventListener('focus', function () {
-            const icon = document.querySelector('.fresh-search-icon');
-            icon.style.transform = 'scale(1.1)';
-            icon.style.color = 'rgba(255, 255, 255, 1)';
-        });
-
-        searchInput.addEventListener('blur', function () {
-            const icon = document.querySelector('.fresh-search-icon');
-            icon.style.transform = 'scale(1)';
-            icon.style.color = 'rgba(255, 255, 255, 0.8)';
-        });
+    rows.forEach(function (row) {
+      if (row.classList.contains('no-results-row')) return;
+      var cells = row.querySelectorAll('td');
+      var found = false;
+      cells.forEach(function (cell) {
+        if (cell.textContent.toLowerCase().indexOf(searchTerm) !== -1) found = true;
+      });
+      row.style.display = (found || searchTerm === '') ? '' : 'none';
     });
+
+    var existingMessage = table.querySelector('.no-results-row');
+    if (existingMessage) existingMessage.remove();
+
+    var visibleRows = Array.prototype.filter.call(rows, function (row) {
+      return !row.classList.contains('no-results-row') && row.style.display !== 'none';
+    });
+
+    if (visibleRows.length === 0 && searchTerm !== '') {
+      var noResultsRow = document.createElement('tr');
+      noResultsRow.className = 'no-results-row';
+      noResultsRow.innerHTML =
+        '<td colspan="6" class="ge-empty"><i class="fas fa-search" style="opacity:0.5;margin-right:6px;"></i> No referrals found matching "' +
+        searchTerm.replace(/"/g, '') + '"</td>';
+      table.appendChild(noResultsRow);
+    }
+  });
+
+  var copyBtn = document.getElementById('copyRefBtn');
+  var refInput = document.getElementById('refLink');
+  if (copyBtn && refInput) {
+    copyBtn.addEventListener('click', function () {
+      var text = copyBtn.getAttribute('data-copy') || refInput.value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied';
+          setTimeout(function () {
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Link';
+          }, 1600);
+        });
+      } else {
+        refInput.select();
+        document.execCommand('copy');
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied';
+        setTimeout(function () {
+          copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Link';
+        }, 1600);
+      }
+    });
+  }
+});
 </script>
 
 <?php include_once 'footer.php'; ?>

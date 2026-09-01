@@ -39,27 +39,27 @@ $userdata = mysqli_fetch_object($userInvestments);
 
     :root {
         /* Fresh Color Palette */
-        --bg-primary: #f8fafc;
-        --bg-secondary: #ffffff;
-        --bg-accent: #e2e8f0;
-        --text-primary: #1a202c;
-        --text-secondary: #4a5568;
-        --text-muted: #718096;
-        --brand-primary: #4f46e5;
-        --brand-secondary: #7c3aed;
+        --bg-primary: #050505;
+        --bg-secondary: #121212;
+        --bg-accent: #1a1a1a;
+        --text-primary: #f5f5f5;
+        --text-secondary: #a0a0a0;
+        --text-muted: #6b6b6b;
+        --brand-primary: #d4af37;
+        --brand-secondary: #b8860b;
         --success: #10b981;
         --warning: #f59e0b;
         --danger: #ef4444;
-        --info: #3b82f6;
-        --border: #e5e7eb;
-        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --info: #6366f1;
+        --border: rgba(212, 175, 55, 0.22);
+        --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
         --radius: 12px;
         --radius-lg: 16px;
     }
 
     body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
         background: var(--bg-primary);
         color: var(--text-primary);
         line-height: 1.6;

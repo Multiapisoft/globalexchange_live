@@ -8,43 +8,12 @@ if (!isset($user)) {
 }
 
 
-// Handle trading status update
-if (isset($_POST['update_status'])) {
-    $status = (int)$_POST['status'];
+// User must have an active non-bot trading plan
+$hasLiveTradingPlan = my_num_rows(my_query(
+    "SELECT recid FROM investments WHERE uid = '" . (int) $uid . "' AND status = 0 AND is_closed = 0 AND ipid != 4 LIMIT 1"
+)) > 0;
 
-    // Ensure user has an active package before updating trade status
-    if ($user->package > 0) {
-        my_query("UPDATE user SET trade_status = $status, trade_status_updated_at = NOW() WHERE uid = " . (int)$user->uid);
-        my_query("UPDATE investments SET trade_status = $status WHERE uid = " . (int)$user->uid);
-
-        setMessage('Trade activated', 'success');
-        // Return success for AJAX request
-        // if (is_ajax_request()) {
-        //     echo json_encode(['success' => true, 'message' => 'Trading status updated successfully']);
-        //     exit;
-        // }
-    } else {
-        setMessage('Kindly trade first to activate trading', 'error');
-        redirect('./invest.php');
-        // Block update if user has no package
-        // if (is_ajax_request()) {
-        //     echo json_encode(['success' => false, 'message' => 'Kindly trade first to activate trading']);
-
-        //     exit;
-        // }
-    }
-}
-
-// Helper function to detect AJAX request
-function is_ajax_request()
-{
-    return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-}
-
-
-// Get user's trading status
-$trade_active = $user->trade_status;
+// Daily profit animation uses plan eligibility (bot plan excluded above)
 $trade_status_updated = $user->trade_status_updated_at;
 
 $query = "SELECT g.*, ip.title FROM income_growth as g"
@@ -84,8 +53,6 @@ $latest_amount = $latest_row && $latest_row->daily_amount ? $latest_row->daily_a
 //Profit time counter
 
 $dailyroiamount = $latest_amount * 1;
-// $dailyroiamount = 1;
-$trade_active = $user->trade_status; // 👈 active / inactive
 // echo $latest_amount;
 
 // $trade_status_updated = "2025-09-15 14:20:00";
@@ -97,21 +64,13 @@ $animation_duration = ($end - $start) * 1000; // Animation duration in milliseco
 
 // $animation_duration = 100*1000; // Animation duration in milliseconds
 $current = 0;
-if ($trade_active) {
-    if (date("Y-m-d", $start) == $today) {
+if ($hasLiveTradingPlan && $dailyroiamount > 0) {
+    if ($trade_status_updated && date("Y-m-d", $start) == $today) {
         $current = (time() - $start) / max(1, $end - $start) * $dailyroiamount;
     } else {
         $current = $dailyroiamount;
     }
 }
-
-
-$active_orders_query = "SELECT COUNT(*) as active_count
-                                          FROM investments
-                                          WHERE status = 0
-                                          AND uid = '$uid'";
-$active_result = my_query($active_orders_query);
-$active_orders = mysqli_fetch_object($active_result)->active_count;
 
 
 ?>
@@ -150,7 +109,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     .balance {
         font-size: 24px;
         font-weight: 600;
-        color: #f0b90b;
+        color: #d4af37;
     }
 
     .content-header {
@@ -218,8 +177,8 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     }
 
     .exchange-card.active {
-        background: rgba(240, 185, 11, 0.15);
-        border: 1px solid rgba(240, 185, 11, 0.3);
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.3);
     }
 
     .exchange-name {
@@ -239,6 +198,20 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     .pair-icon {
         width: 24px;
         height: 24px;
+    }
+
+    .live-chart-panel {
+        background: #161824;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        min-height: 420px;
+    }
+
+    .live-chart-panel .tradingview-widget-container,
+    .live-chart-panel .tradingview-widget-container__widget {
+        height: 400px !important;
     }
 
     .trading-layout {
@@ -340,7 +313,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     .stat-value {
         font-size: 24px;
         font-weight: 600;
-        color: #f0b90b;
+        color: #d4af37;
     }
 
     .activation-container {
@@ -351,7 +324,7 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
     }
 
     .activate-button {
-        background: linear-gradient(135deg, #f0b90b 0%, #d8a600 100%);
+        background: linear-gradient(135deg, #d4af37 0%, #d8a600 100%);
         color: #000;
         border: none;
         padding: 15px 40px;
@@ -359,13 +332,13 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(240, 185, 11, 0.4);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
         transition: all 0.3s ease;
     }
 
     .activate-button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(240, 185, 11, 0.6);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.6);
     }
 
     @keyframes flashGreen {
@@ -436,17 +409,13 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
 <div class="container">
     <!-- Header Section -->
     <div class="header">
-        <?php if ($trade_active) { ?>
+        <?php if ($hasLiveTradingPlan) { ?>
             <div class="blink" style="border-radius:5px; padding: 5px 10px;"> Live</div>
         <?php } ?>
-        <div class="status-badge" id="status-badge">TRADING INACTIVE</div>
+        <div class="status-badge" id="status-badge"><?php echo $hasLiveTradingPlan ? 'LIVE MARKET' : 'NO ACTIVE PLAN'; ?></div>
     </div>
     <!-- Stats Section -->
     <div class="stats">
-        <div class="stat-card">
-            <div class="stat-title">Active Trades</div>
-            <div class="stat-value"><?php echo $active_orders ?></div>
-        </div>
         <div class="stat-card">
             <div class="stat-title">Total Profit</div>
             <div class="stat-value"> + <?= number_format($total_earnings, 2) ?> USDT</div>
@@ -475,8 +444,30 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
         </div>
     </div>
 
-    <!-- Trading Sections (Hidden by Default) -->
-    <div id="trading-sections" style="display: none;">
+    <!-- Trading Chart (always visible when user has a non-bot plan) -->
+    <div id="trading-sections" style="<?php echo $hasLiveTradingPlan ? 'display:block;' : 'display:none;'; ?>">
+        <div class="live-chart-panel">
+            <div class="section-title">Live Trading Chart</div>
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                {
+                    "autosize": true,
+                    "symbol": "BINANCE:BTCUSDT",
+                    "interval": "15",
+                    "timezone": "Etc/UTC",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "en",
+                    "backgroundColor": "rgba(22, 24, 36, 1)",
+                    "gridColor": "rgba(212, 175, 55, 0.08)",
+                    "allow_symbol_change": true,
+                    "calendar": false,
+                    "support_host": "https://www.tradingview.com"
+                }
+                </script>
+            </div>
+        </div>
         <!-- Trading Pair -->
         <div class="trading-pair">
             <!-- <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" class="pair-icon" alt="BTC"> -->
@@ -517,55 +508,16 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
 
     </div>
 
-    <!-- Inactive Trading Message -->
-    <div id="inactive-message" class="inactive-message">
-        Trading is currently inactive. Please activate trading to view details.
-    </div>
-
-    <!-- Trading Activation -->
-    <div class="activation-container" id="InactiveForm">
-        <!-- <form action="" method="post">
-            <input type="hidden" name="status" id="trade-status" value="<?= $trade_active ? '0' : '1' ?>">
-            <button class="activate-button" type="submit" name="update_status">ACTIVATE TRADING</button>
-        </form> -->
-        <button class="activate-button" id="activate-trading">ACTIVATE TRADING</button>
-    </div>
-    <div class="activation-container" id="activForm" style="display: none;">
-        <form action="" method="post">
-            <input type="hidden" name="status" id="trade-status" value="1">
-            <button class="activate-button" type="submit" name="update_status">ACTIVATE TRADING</button>
-        </form>
+    <!-- No trading plan message (bot plan excluded) -->
+    <div id="inactive-message" class="inactive-message" style="<?php echo $hasLiveTradingPlan ? 'display:none;' : 'display:block;'; ?>">
+        You need an active trading plan to view the live chart. Bot subscription plans are not eligible.
+        <a href="trade.php" style="color:#d4af37;font-weight:700;margin-left:6px;">View Plans</a>
     </div>
 
 </div>
 
 <script>
-    // Function to toggle trading sections visibility
-    function toggleTradingSections(isActive) {
-
-        console.log("toggleTradingSections", isActive);
-        const tradingSections = document.getElementById('trading-sections');
-        const inactiveMessage = document.getElementById('inactive-message');
-        const statusBadge = document.getElementById('status-badge');
-        const activateButton = document.getElementById('activate-trading');
-
-        if (isActive) {
-            tradingSections.style.display = 'block';
-            inactiveMessage.style.display = 'none';
-            statusBadge.textContent = 'TRADING ACTIVE';
-            statusBadge.classList.remove('inactive');
-            activateButton.textContent = 'DEACTIVATE TRADING';
-        } else {
-            tradingSections.style.display = 'none';
-            inactiveMessage.style.display = 'block';
-            statusBadge.textContent = 'TRADING INACTIVE';
-            statusBadge.classList.add('inactive');
-            activateButton.textContent = 'ACTIVATE TRADING';
-        }
-    }
-
-
-
+    const hasLiveTradingPlan = <?= $hasLiveTradingPlan ? 'true' : 'false' ?>;
 
     // Function to generate order book rows
     function generateOrderBookRows(asks, bids, currentPrice) {
@@ -679,13 +631,15 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
         }
     }
 
-    // Function to simulate live trading updates
-    async function simulateLiveTrading() {
-        console.log("simulateLiveTrading");
-        let activeExchange = 'Binance';
-        async function updateData() {
-            if (document.getElementById('status-badge').textContent !== 'TRADING ACTIVE') return;
+    let activeExchange = 'Binance';
+    let refreshMarketData = null;
 
+    async function simulateLiveTrading() {
+        if (!hasLiveTradingPlan) {
+            return;
+        }
+
+        async function updateData() {
             let data;
             if (activeExchange === 'Binance') {
                 data = await fetchBinanceData();
@@ -696,65 +650,34 @@ $active_orders = mysqli_fetch_object($active_result)->active_count;
             if (data) {
                 generateOrderBookRows(data.asks, data.bids, data.currentPrice);
                 generateTradeHistoryRows(data.trades);
-
-                // Simulate profit updates
-                if (Math.random() > 0.7) {
-                    const profitElement = document.querySelector('.stat-value');
-                    // const currentProfit = parseFloat(profitElement.textContent) || 10;
-                    // const newProfit = (currentProfit + (Math.random() * 0.5 - 0.25)).toFixed(8);
-                    // profitElement.textContent = `${newProfit} USDT`;
-
-                    // const floatingProfit = document.createElement('div');
-                    // floatingProfit.className = 'floating-profit';
-                    // floatingProfit.textContent = `${parseFloat(newProfit) - currentProfit > 0 ? '+' : ''}${(parseFloat(newProfit) - currentProfit).toFixed(4)}`;
-                    // floatingProfit.style.left = `${profitElement.getBoundingClientRect().left}px`;
-                    // floatingProfit.style.top = `${profitElement.getBoundingClientRect().top}px`;
-                    // document.body.appendChild(floatingProfit);
-
-                    setTimeout(() => {
-                        document.body.removeChild(floatingProfit);
-                    }, 1000);
-                }
             }
         }
 
+        refreshMarketData = updateData;
+        updateData();
         setInterval(updateData, 3000);
     }
 
     // Initialize the page
     document.addEventListener('DOMContentLoaded', function() {
-        toggleTradingSections(false);
-        simulateLiveTrading();
-
-        document.getElementById('activate-trading').addEventListener('click', function() {
-
-
-            console.log("jhfksdhjhsd $trade_active", <?= $trade_active ?>);
-        });
-
-        const isActive = <?= $trade_active ?>;
-        // const isActive = 0;
-        // const isActive = document.getElementById('status-badge').textContent === 'TRADING ACTIVE';
-        if (isActive == 0) {
-            document.getElementById('activForm').style.display = 'block';
-            document.getElementById('status-badge').textContent = 'TRADING INACTIVE';
-            document.getElementById('InactiveForm').style.display = 'none';
-        } else {
-            document.getElementById('InactiveForm').style.display = 'none';
+        if (hasLiveTradingPlan) {
+            simulateLiveTrading();
         }
-        toggleTradingSections(isActive);
 
         document.querySelectorAll('.exchange-card').forEach(card => {
             card.addEventListener('click', function() {
                 document.querySelectorAll('.exchange-card').forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
-                activeExchange = this.querySelector('.exchange-name').textContent;
+                activeExchange = this.querySelector('.exchange-name').textContent.trim();
+                if (refreshMarketData && (activeExchange === 'Binance' || activeExchange === 'Bybit')) {
+                    refreshMarketData();
+                }
             });
         });
     });
 </script>
 
-<?php if ($trade_active): ?>
+<?php if ($hasLiveTradingPlan && $dailyroiamount > 0): ?>
     <script>
         function animate(id, start, end, dur = 2000) {
             let el = document.getElementById(id),
